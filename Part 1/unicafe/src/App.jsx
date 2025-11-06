@@ -13,12 +13,27 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
    
-  const [selected, setSelected] = useState(0)
+  const [selected, setSelected] = useState(0);
+  const [votes,setVotes] = useState(Array(anecdotes.length).fill(0));
 
+
+  const voteClick = ()=> {
+    const newVotes = [...votes]
+    newVotes[selected]+=1
+    setVotes(newVotes);
+  }
+
+  const handleResetButton = () => {
+    setSelected(Math.floor(Math.random() * anecdotes.length))
+    
+  }
+  
   return (
     <div>
       {anecdotes[selected]} <br/>
-      <button onClick={()=>setSelected(Math.round(Math.random() * 8))}>reset anecdote</button>
+      <p>has {votes[selected]}votes</p>
+      <button onClick={voteClick}>Vote</button>
+      <button onClick={handleResetButton}>reset anecdote</button>
     </div>
   )
 }
