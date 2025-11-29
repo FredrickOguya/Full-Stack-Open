@@ -12,8 +12,14 @@ const App = () => {
     const numberObject = {
       name: newName
     }
-    setPersons([...persons,numberObject]);
-    setNewName('');
+    const alreadyExists = persons.some(person => person.name ===newName)
+    if(alreadyExists) {
+      alert(`${newName} is already added to phonebook`)
+    }else{
+      setPersons([...persons,numberObject]);
+      setNewName('');
+    }
+    
   }
 
   const handleChange = (event) => {
@@ -38,7 +44,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <div>
-        {persons.map(persons=> 
+        { persons.map(persons=> 
           <p key={persons.name}>{persons.name}</p>
         )}
       </div>
