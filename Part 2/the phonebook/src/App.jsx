@@ -1,5 +1,5 @@
-import { useState } from 'react'
-
+import { useEffect, useState } from 'react';
+import axios from 'axios';
     const Filter = ({searchedName,handleSearch}) => {
       return(
         <p>filter shown with <input 
@@ -47,6 +47,14 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchedName, setSearchedName] = useState('');
+
+  useEffect(()=> {
+    axios.get('http://localhost:3001/persons')
+    .then(response => {
+      console.log('promise fulfilled')
+      setPersons(response.data)
+    })
+  }, [])
 
 
   const addNewNumber = (event) => {
