@@ -33,11 +33,12 @@ import PersonService from './services/persons';
       )
     }
 
-    const Persons = ({filteredSearch}) => {
+    const Persons = ({filteredSearch,handleDelete}) => {
       return (
         <div>
         { filteredSearch.map(persons=> 
-          <p key={persons.name}>{persons.name} {persons.number}</p>
+          <p key={persons.name}>{persons.name} {persons.number}
+          <button onClick={()=>handleDelete(persons.id)}>Delete</button></p>
         )}
       </div>
       )
@@ -89,6 +90,16 @@ const App = () => {
     event.preventDefault()
     setSearchedName(event.target.value)
   }
+
+  const handleDelete = (id) => {
+    const person = persons.find(p=> p.id === id);
+    if(window.confirm(`Delete ${person.name}?`)){
+      PersonService
+      .deletePerson(id)
+      .then(()=> setPersons(persons.filter(p => p.id !== id)))
+    }
+    
+  }
   
   const filteredSearch = persons.filter(person => person.name.toLowerCase().includes(searchedName.toLowerCase()))
   
@@ -112,7 +123,7 @@ const App = () => {
 
       <h2>Numbers</h2>
       
-      <Persons
+      <Persons handleDelete={handleDelete}
         filteredSearch={filteredSearch}
       />
 
