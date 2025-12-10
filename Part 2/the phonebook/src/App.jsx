@@ -11,7 +11,7 @@ import PersonService from './services/persons';
                               /></p>
       )
     }
-    const PersonForm = ({setNewName,setNewNumber,addNewNumber, newName, handleSubmit,newNumber}) => {
+    const PersonForm = ({setNewName,setNewNumber,addNewNumber, newName, newNumber}) => {
       return (
         <form onSubmit={addNewNumber}>
         <div>
@@ -37,7 +37,7 @@ import PersonService from './services/persons';
       return (
         <div>
         { filteredSearch.map(persons=> 
-          <p key={persons.name}>{persons.name} {persons.number}
+          <p key={persons.id}>{persons.name} {persons.number}
           <button onClick={()=>handleDelete(persons.id)}>Delete</button></p>
         )}
       </div>
@@ -70,7 +70,17 @@ const App = () => {
     const alreadyExists = persons.some(person => person.name ===newName)
     
     if(alreadyExists) {
-      alert(`${newName} is already added to phonebook`)
+      const updatingPerson = persons.find(person =>person.name === newName)
+      if(window.confirm(`Do you want to update contact for ${updatingPerson.name}?`)){
+        PersonService
+        .updatePerson(updatingPerson.id,{...updatingPerson,number: newNumber})
+        .then(response => {
+          setPersons(persons.map(person => person.id === updatingPerson.id ? response.data : person))
+          setNewName('');
+          setNewNumber('');
+        })
+      }
+      
     }else{
 
       PersonService
