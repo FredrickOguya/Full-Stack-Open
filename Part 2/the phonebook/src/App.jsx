@@ -69,10 +69,15 @@ const App = () => {
     if(alreadyExists) {
       alert(`${newName} is already added to phonebook`)
     }else{
-      setPersons([...persons,numberObject]);
-      setNewName('');
-      setNewNumber('')
+      axios.post('http://localhost:3001/persons',numberObject)
+              .then(response => {
+                setPersons([...persons,response.data])
+                setNewName('');
+                setNewNumber('');
+              })
     }
+
+    
     
   }
   const handleSearch = (event) => {
