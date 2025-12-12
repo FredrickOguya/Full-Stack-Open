@@ -1,10 +1,12 @@
-const Notification = ({ message }) => {
+const Notification = ({ message, err }) => {
   if (message === null) {
     return null
   }
 
+  const color = err === true ? "green" : "error";
+
   return (
-    <div className="notify">
+    <div className={color}>
       {message}
     </div>
   )

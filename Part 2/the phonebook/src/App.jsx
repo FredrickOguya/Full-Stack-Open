@@ -53,6 +53,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [searchedName, setSearchedName] = useState('');
   const [notification, setNotification] = useState(null);
+  const [err, setErr] = useState(null);
 
   useEffect(()=> {
     PersonService
@@ -82,9 +83,13 @@ const App = () => {
           setNotification(`${updatingPerson.name} updated successfully`)
           setNewName('');
           setNewNumber('');
+        }).catch(error => {
+          setErr(false);
+          setNotification(`Information of ${updatingPerson.name} has already been removed from the server`)
         })
       }
       setTimeout(()=> {
+        setErr(null);
         setNotification(null);
       },5000)
       
@@ -96,9 +101,11 @@ const App = () => {
         setPersons(persons.concat(response.data));
         setNewNumber('');
         setNewName('');
+        setErr(true)
         setNotification(`Added ${newName}`)
       })
       setTimeout(()=> {
+        setErr(null)
         setNotification(null);
       },5000)
       
@@ -129,7 +136,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} />
+      <Notification message={notification} err={err} />
       <Filter searchedName={searchedName} handleSearch={handleSearch}/>
 
       <h2>add a new</h2>
