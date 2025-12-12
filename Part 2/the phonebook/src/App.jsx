@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import './index.css'
 import PersonService from './services/persons';
+import Notification from './Components/Notification';
+
 
     const Filter = ({searchedName,handleSearch}) => {
       return(
@@ -50,6 +52,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchedName, setSearchedName] = useState('');
+  const [notification, setNotification] = useState(null);
 
   useEffect(()=> {
     PersonService
@@ -76,10 +79,14 @@ const App = () => {
         .updatePerson(updatingPerson.id,{...updatingPerson,number: newNumber})
         .then(response => {
           setPersons(persons.map(person => person.id === updatingPerson.id ? response.data : person))
+          setNotification(`${updatingPerson.name} updated successfully`)
           setNewName('');
           setNewNumber('');
         })
       }
+      setTimeout(()=> {
+        setNotification(null);
+      },5000)
       
     }else{
 
@@ -88,8 +95,12 @@ const App = () => {
       .then(response => {
         setPersons(persons.concat(response.data));
         setNewNumber('');
-        setNewName('')
+        setNewName('');
+        setNotification(`Added ${newName}`)
       })
+      setTimeout(()=> {
+        setNotification(null);
+      },5000)
       
     }
 
@@ -118,7 +129,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-
+      <Notification message={notification} />
       <Filter searchedName={searchedName} handleSearch={handleSearch}/>
 
       <h2>add a new</h2>
