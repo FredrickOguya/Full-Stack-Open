@@ -5,6 +5,7 @@ import axios from 'axios';
 function App() {
   const [countries, setCountries] = useState([]);
   const [searchedCountry, setSearchedCountry] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState(null)
 
   // link for all countries https://studies.cs.helsinki.fi/restcountries/api/all
   //link for countries  using nme https://studies.cs.helsinki.fi/restcountries/api/name/finland
@@ -14,6 +15,28 @@ function App() {
         setCountries(response.data);
        })
   },[])
+  console.log(selectedCountry);
+
+  const CountryInfo = ({country}) => {
+  return (
+    <div>
+      <p>{country.capital?.join(',')}</p>
+      <p>{country.area}</p>
+      <p>{Object.values(country.languages?? {}).map(lang => <li key={lang}>
+      {lang}
+      </li>)}</p>
+      <img src={country.flags.png} alt="countryFlag" />
+    </div>
+    
+  )
+  }
+  const handleShowButton = (country) => {
+    setSelectedCountry(country)
+    return (
+      
+      <CountryInfo country={country}/>
+    )
+  }
   
 
   const filteredCountries = countries.filter(country => country.name.common.toLowerCase().includes(searchedCountry.toLowerCase()))       
@@ -28,13 +51,8 @@ function App() {
         />
         <ul>{searchedCountry && filteredCountries.length > 10 ? <p>Too many matches,specify another filter</p> : filteredCountries.map(country=>
           <li key={country.name.common}>
-            <h1>{country.name.common}</h1>
-            <p>{country.capital?.join(',')}</p>
-            <p>{country.area}</p>
-            <p>{Object.values(country.languages?? {}).map(lang => <li key={lang}>
-              {lang}
-            </li>)}</p>
-            <img src={country.flags.png} alt="countryFlag" />
+            <h1>{country.name.common}</h1><button onClick={()=>setSelectedCountry(country)}>show</button>
+            {selectedCountry?.name.common === country.name.common && <CountryInfo country={country}/>}
           </li>
         )}</ul>
       
