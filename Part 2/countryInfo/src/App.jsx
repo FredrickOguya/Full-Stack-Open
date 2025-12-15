@@ -5,27 +5,54 @@ import axios from 'axios';
 function App() {
   const [countries, setCountries] = useState([]);
   const [searchedCountry, setSearchedCountry] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState(null)
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [weatherInfo, setWeatherInfo] = useState(null);
+  
 
-  // link for all countries https://studies.cs.helsinki.fi/restcountries/api/all
-  //link for countries  using nme https://studies.cs.helsinki.fi/restcountries/api/name/finland
+
+
+  
   useEffect(()=> {
     axios.get('https://studies.cs.helsinki.fi/restcountries/api/all/')
        .then(response=> {
         setCountries(response.data);
        })
   },[])
-  console.log(selectedCountry);
+
+  
+  useEffect(()=> {
+    if(!selectedCountry)return;
+    const city = selectedCountry.capital?.[0];
+    if(!city)return;
+    const apiKey = import.meta.env.VITE_API_KEY;
+     axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+     .then(response => setWeatherInfo(response.data))
+     console.log(weatherInfo);
+  },[selectedCountry])
 
   const CountryInfo = ({country}) => {
   return (
     <div>
       <p>{country.capital?.join(',')}</p>
       <p>{country.area}</p>
-      <p>{Object.values(country.languages?? {}).map(lang => <li key={lang}>
+      <p>{Object.values(country.languages?? {}).map(lang => (<li key={lang}>
       {lang}
-      </li>)}</p>
+      </li>))}</p>
       <img src={country.flags.png} alt="countryFlag" />
+      <h2>Weather in Helsinki</h2>
+      <p>{weatherInfo && (
+  <div>
+    <h2>Weather in {country.capital?.[0]}</h2>
+    <p>Temperature: {weatherInfo.main.temp} °Celcius</p>
+    <p>Wind: {weatherInfo.wind.speed} m/s</p>
+    <p>Conditions: {weatherInfo.weather?.[0]?.description}</p>
+    <img
+      src={`https://openweathermap.org/img/wn/${weatherInfo.weather?.[0]?.icon}@2x.png`}
+      alt={weatherInfo.weather?.[0]?.description}
+    />
+  </div>
+)}
+</p>
     </div>
     
   )
