@@ -22,7 +22,10 @@ let persons = [
 ];
 
 const express = require('express')
+const morgan = require('morgan')
 const app = express();
+
+app.use(morgan('tiny'))
 app.use(express.json());
 
 app.get('/api/persons',(request,response) => {
@@ -69,7 +72,6 @@ app.post('/api/persons',(request,response)=> {
     person.id = String(id);
     response.json(person);
   }
-  
 })
 
 const PORT = 3001;
