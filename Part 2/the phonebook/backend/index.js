@@ -57,8 +57,19 @@ app.delete('/api/persons/:id',(request,response)=>{
 app.post('/api/persons',(request,response)=> {
   const id = Math.floor(Math.random() * 100)
   const person = request.body
-  person.id = String(id);
-  response.json(person)
+  if(!person.name || !person.number ){
+    return response.status(400).json({
+      error: "name and number must have values"
+    })
+  }else if(persons.find(p => p.name === person.name)){
+    return response.status(400).json({
+      error: "name must be unique"
+    })
+  }else{
+    person.id = String(id);
+    response.json(person);
+  }
+  
 })
 
 const PORT = 3001;
