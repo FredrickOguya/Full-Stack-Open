@@ -45,6 +45,14 @@ app.get('/info',(request,response)=> {
   response.send(`<p>Phonebook has info for ${persons.length} people</p><br/> ${curentTime}`);
 })
 
+app.delete('/api/persons/:id',(request,response)=>{
+  const id = request.params.id;
+  const deletePerson = persons.find(n=> n.id === id);
+
+  persons = persons.filter(person=> person.id !== deletePerson.id);
+  response.send(persons);
+})
+
 const PORT = 3001;
 
 app.listen(PORT, ()=> {
