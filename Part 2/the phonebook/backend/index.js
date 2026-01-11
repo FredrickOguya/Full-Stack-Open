@@ -1,31 +1,13 @@
-let persons = [];
-
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 
-const mongoose = require('mongoose');
 
-const password = process.argv[2];
 
-const url = `mongodb+srv://onyangofredrickoguya:${password}@cluster0.hxovx14.mongodb.net/phonebook?appName=Cluster0`
 
-mongoose.set('strictQuery',false);
-mongoose.connect(url, {family: 4})
 
-const personSchema = new mongoose.Schema({
-  name: String,
-  number: Number
-})
-personSchema.set('toJSON',{
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-  }
-})
-
-const Person = mongoose.model('Person', personSchema);
+const Person = require('./models/person')
 
 const app = express();
 
@@ -58,8 +40,10 @@ app.get('/api/persons/:id',(request,response)=> {
 })
 
 app.get('/info',(request,response)=> {
-  const curentTime = new Date()
-  response.send(`<p>Phonebook has info for ${persons.length} people</p><br/> ${curentTime}`);
+  Person.countDocuments({}).then(count => {
+    const currentTime = new Date()
+    response.send(`<p>Phoneboook has info for ${count} people</p><br/> ${currentTime}`)
+  })
 })
 
 app.delete('/api/persons/:id',(request,response)=>{
@@ -94,7 +78,7 @@ app.post('/api/persons',(request,response)=> {
   })
 })
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT
 
 app.listen(PORT, ()=> {
   console.log(`app listening on port ${PORT}`)
