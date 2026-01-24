@@ -17,7 +17,7 @@ mongoose.connect(url,{ family: 4 })
     number: Number,
   })
 
-  personSchema.set('tosJSON', {
+  personSchema.set('toJSON', {
     transform: (document, returnedObject) => {
       returnedObject.id = returnedObject._id.toString()
       delete returnedObject._id
