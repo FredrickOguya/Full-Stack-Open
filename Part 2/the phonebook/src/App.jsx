@@ -59,7 +59,7 @@ const App = () => {
     PersonService
     .getPersons()
     .then(response => {
-      setPersons(response.data)
+      setPersons(response)
     })
   }, [])
 
@@ -79,37 +79,39 @@ const App = () => {
         PersonService
         .updatePerson(updatingPerson.id,{...updatingPerson,number: newNumber})
         .then(response => {
-          setPersons(persons.map(person => person.id === updatingPerson.id ? response.data : person))
+          setPersons(persons.map(person => person.id === updatingPerson.id ? response : person))
           setNotification(`${updatingPerson.name} updated successfully`)
           setNewName('');
           setNewNumber('');
-        }).catch(error => {
-          setErr(false);
+        })
+        .catch(error => {
+          setErr(true);
           setNotification(`Information of ${updatingPerson.name} has already been removed from the server`)
         })
       }
-      setTimeout(()=> {
-        setErr(null);
-        setNotification(null);
-      },5000)
+      
       
     }else{
 
       PersonService
       .createPerson(numberObject)
       .then(response => {
-        setPersons(persons.concat(response.data));
+        setPersons(persons.concat(response));
         setNewNumber('');
         setNewName('');
-        setErr(true)
+        setErr(false)
         setNotification(`Added ${newName}`)
       })
-      setTimeout(()=> {
+      .catch(error => {
+        setErr(true)
+        setNotification(error.response.data.error)
+      })
+            
+    }
+    setTimeout(()=> {
         setErr(null)
         setNotification(null);
       },5000)
-      
-    }
 
     
     
@@ -129,7 +131,7 @@ const App = () => {
     
   }
   
-  const filteredSearch = persons.filter(person => person.name.toLowerCase().includes(searchedName.toLowerCase()))
+  const filteredSearch = (persons || []).filter(person => person.name.toLowerCase().includes(searchedName.toLowerCase()))
   
   
 

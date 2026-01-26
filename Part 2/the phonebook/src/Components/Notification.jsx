@@ -3,7 +3,7 @@ const Notification = ({ message, err }) => {
     return null
   }
 
-  const color = err === true ? "green" : "error";
+  const color = err === true ? "error" : "success";
 
   return (
     <div className={color}>
