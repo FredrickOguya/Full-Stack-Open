@@ -20,13 +20,34 @@ const personSchema = new mongoose.Schema({
     minLength: 3,
     required: true
   },
-  number: String,
+  number: {
+    type: String,
+    required: true,
+    minLength: 8,
+    validate: {
+      validator: function (value) {
+        const v = String()
+        if (!v.includes('-')) return false
+
+        const parts = v.split('-')
+        if (parts.length !== 2) return false
+
+        const [first, second] = parts
+
+        if (!/^\d{2,3}$/.test(first)) return false
+        if (!/^\d+$/.test(second)) return false
+
+        return true
+      },
+      message: props => `${props.value} is not a valid phone number!`
+    }
+  },
 })
 
 const Person = mongoose.model('person', personSchema);
 
 if(process.argv.length === 3){
-  person.find({}).then(result => {
+  Person.find({}).then(result => {
     console.log('phonebook: ')
     result.forEach(person => {
       console.log(`${person.name} ${person.number}`)
@@ -43,7 +64,7 @@ if(process.argv.length === 3){
 })
 
 person.save().then(result => {
-  console.log(`added ${name} number 0${number} to phonebook`)
+  console.log(`added ${name} number ${number} to phonebook`)
 })
 }
 
