@@ -5,6 +5,7 @@ const listHelper = require('../utils/list_helper')
 
 
 const totalLikes = require('../utils/list_helper').totalLikes
+const favouriteBlog = listHelper.favoriteBlog
 
 test('dummy returns one', () => {
   const blogs = []
@@ -13,9 +14,7 @@ test('dummy returns one', () => {
   assert.strictEqual(result,1)
 })
 
-describe('Total likes', () => {
-
-  const blogs = [
+const blogs = [
     {
       _id: "5a422a851b54a676234d17f7",
       title: "React patterns",
@@ -77,6 +76,7 @@ describe('Total likes', () => {
     }
   ]
 
+describe('Total likes', () => {
 
   test('of empty array is zero', () => {
     assert.strictEqual(totalLikes([]),0)
@@ -88,5 +88,19 @@ describe('Total likes', () => {
 
   test('of a bligger list is calculated right', () => {
     assert.strictEqual(totalLikes(blogs), 36)
+  })
+})
+
+describe('Favourite blog', () => {
+  test('of an empty array is zero',() => {
+    assert.strictEqual((favouriteBlog([])), 0)
+  })
+
+  test('of one blog is the blog', () => {
+    assert.strictEqual((favouriteBlog(listWithOneBlog)),listWithOneBlog[0])
+  })
+
+  test('of list of many blogs is the blogs with most likes',  () => {
+    assert.strictEqual((favouriteBlog(blogs)),blogs[2])
   })
 })
