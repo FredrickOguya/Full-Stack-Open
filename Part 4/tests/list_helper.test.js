@@ -6,6 +6,7 @@ const listHelper = require('../utils/list_helper')
 
 const totalLikes = require('../utils/list_helper').totalLikes
 const favouriteBlog = listHelper.favoriteBlog
+const mostBLogs = listHelper.mostBLogs
 
 test('dummy returns one', () => {
   const blogs = []
@@ -102,5 +103,25 @@ describe('Favourite blog', () => {
 
   test('of list of many blogs is the blogs with most likes',  () => {
     assert.strictEqual((favouriteBlog(blogs)),blogs[2])
+  })
+})
+
+describe('Author with most blogs', () => {
+  test('in an empty array', () => {
+    assert.strictEqual((mostBLogs([])),0)
+  })
+
+  test('in one blog', () => {
+        assert.deepStrictEqual((mostBLogs(listWithOneBlog)),{
+          author:  `${listWithOneBlog[0].author}`,
+          blogs: 1
+        })
+  })
+
+  test('in many blogs', () => {
+    assert.deepStrictEqual((mostBLogs(blogs)),{
+      author: "Robert C. Martin",
+      blogs: 3
+    })
   })
 })
