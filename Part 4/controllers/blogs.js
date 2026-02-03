@@ -6,8 +6,14 @@ blogsRouter.get('/',async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/',async (request, response) => {
+blogsRouter.post('/',async (request, response, next) => {
   const body = request.body
+
+  if(!body.title || !body.url) {
+    return response.status(400).json({
+      error: 'title and url are missing'
+    })
+  }
 
   const blog = new Blog(body)
 

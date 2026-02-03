@@ -70,7 +70,7 @@ test('a valid blog can be added via POST', async () => {
     assert(titles.includes('Canonical string reduction'))
 })
 
-test.only('If there is no likes, It is defaulted to 0', async () => {
+test('If there is no likes, It is defaulted to 0', async () => {
   const newBlog = {
       _id: "5a422b891b54a676234d17fa",
       title: "First class tests",
@@ -86,6 +86,24 @@ test.only('If there is no likes, It is defaulted to 0', async () => {
     .expect('Content-Type', /application\/json/)
 
   assert.strictEqual(response.body.likes, 0)
+})
+
+test.only('a blog without a title is not added',async () => {
+  const newBlog = {
+      _id: "5a422ba71b54a676234d17fb",
+      author: "Robert C. Martin",
+      url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+      likes: 0,
+      __v: 0
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const blogsAtEnd = await Blog.find({})
+    assert.strictEqual(blogsAtEnd.length, initialBLogs.length)
 })
 
 after(async () => {
