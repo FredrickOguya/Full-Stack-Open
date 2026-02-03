@@ -47,7 +47,7 @@ test('blog posts have id property instead of _id', async () => {
   })
 })
 
-test.only('a valid blog can be added via POST', async () => {
+test('a valid blog can be added via POST', async () => {
   const newBlog = {
       _id: "5a422b3a1b54a676234d17f9",
       title: "Canonical string reduction",
@@ -68,6 +68,24 @@ test.only('a valid blog can be added via POST', async () => {
 
     const titles = blogsAtEnd.map(n => n.title)
     assert(titles.includes('Canonical string reduction'))
+})
+
+test.only('If there is no likes, It is defaulted to 0', async () => {
+  const newBlog = {
+      _id: "5a422b891b54a676234d17fa",
+      title: "First class tests",
+      author: "Robert C. Martin",
+      url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+      __v: 0
+    }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  assert.strictEqual(response.body.likes, 0)
 })
 
 after(async () => {
