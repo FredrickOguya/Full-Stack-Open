@@ -122,6 +122,34 @@ test('Deleting a single blog post resource' ,async () => {
     assert.strictEqual(blogsAtEnd.length, blogsBeforeDelete.length - 1)
 })
 
+test('a blog can be updated with PUT', async () => {
+
+  const blogsAtStart = await Blog.find({})
+  const blogToUpdate = blogsAtStart[0]
+
+  const updatedBlog = {
+    title: blogToUpdate.title,
+    author: blogToUpdate.author,
+    url: blogToUpdate.url,
+    likes: blogToUpdate.likes + 10
+  }
+
+  const response = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  assert.strictEqual(response.body.likes, updatedBlog.likes)
+
+  const blogsAtEnd = await Blog.find({})
+  
+  assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)
+
+  const updatedFromDb = blogsAtEnd.find(b => b.id === blogToUpdate.id)
+  assert.strictEqual(updatedFromDb.likes, updatedBlog.likes)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
