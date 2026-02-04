@@ -8,20 +8,20 @@ const api = supertest(app)
 
 const initialBLogs = [
   {
-    _id: "5a422a851b54a676234d17f7",
+    id: "5a422a851b54a676234d17f7",
     title: "React patterns",
     author: "Michael Chan",
     url: "https://reactpatterns.com/",
     likes: 7,
-    __v: 0
+    v: 0
   },
   {
-    _id: "5a422aa71b54a676234d17f8",
+    id: "5a422aa71b54a676234d17f8",
     title: "Go To Statement Considered Harmful",
     author: "Edsger W. Dijkstra",
     url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     likes: 5,
-    __v: 0  
+    v: 0  
   }
 ]
 
@@ -31,15 +31,15 @@ beforeEach(async () => {
 })
 
 test('blogs are returned as json and correct amount',async () => {
-  const reponse = await api
+  const response = await api
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/)
 
-    assert.strictEqual(reponse.body.length,initialBLogs.length)
+    assert.strictEqual(response.body.length,initialBLogs.length)
 })
 
-test('blog posts have id property instead of _id', async () => {
+test('blog posts have id property instead of id', async () => {
   const response = await api.get('/api/blogs')
   response.body.forEach(blog => {
     assert.ok(blog.id)
@@ -49,12 +49,12 @@ test('blog posts have id property instead of _id', async () => {
 
 test('a valid blog can be added via POST', async () => {
   const newBlog = {
-      _id: "5a422b3a1b54a676234d17f9",
+      id: "5a422b3a1b54a676234d17f9",
       title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
-      __v: 0
+      v: 0
     }
 
     await api
@@ -72,11 +72,11 @@ test('a valid blog can be added via POST', async () => {
 
 test('If there is no likes, It is defaulted to 0', async () => {
   const newBlog = {
-      _id: "5a422b891b54a676234d17fa",
+      id: "5a422b891b54a676234d17fa",
       title: "First class tests",
       author: "Robert C. Martin",
       url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
-      __v: 0
+      v: 0
     }
 
   const response = await api
@@ -88,13 +88,13 @@ test('If there is no likes, It is defaulted to 0', async () => {
   assert.strictEqual(response.body.likes, 0)
 })
 
-test.only('a blog without a title is not added',async () => {
+test('a blog without a title is not added',async () => {
   const newBlog = {
-      _id: "5a422ba71b54a676234d17fb",
+      id: "5a422ba71b54a676234d17fb",
       author: "Robert C. Martin",
       url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
       likes: 0,
-      __v: 0
+      v: 0
     }
 
     await api
@@ -104,6 +104,22 @@ test.only('a blog without a title is not added',async () => {
 
     const blogsAtEnd = await Blog.find({})
     assert.strictEqual(blogsAtEnd.length, initialBLogs.length)
+})
+
+test('Deleting a single blog post resource' ,async () => {
+    const blogsBeforeDelete = await Blog.find({})
+
+    const blogToDelete = blogsBeforeDelete[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAtEnd = await Blog.find({})
+    const ids = blogsAtEnd.map(n => n.id)
+    assert(!ids.includes(blogToDelete.id))
+
+    assert.strictEqual(blogsAtEnd.length, blogsBeforeDelete.length - 1)
 })
 
 after(async () => {
