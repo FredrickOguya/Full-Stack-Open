@@ -4,6 +4,7 @@ const config = require('./utils/config')
 const app = express()
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
+const errorHandler = require('./utils/middleware')
 
 const mongoUrl = config.MONGODB_URI
 
@@ -23,5 +24,10 @@ connectToDb()
 app.use(express.json())
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
+
+
+app.use(express.json())
+app.use(errorHandler)
+
 
 module.exports = app;

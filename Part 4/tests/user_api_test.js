@@ -39,7 +39,81 @@ describe('when there is initially one user in db', () => {
     assert(usernames.includes(newUser.username))
   })
 
+  test('Creation of username with less characters in username',async () => {
+    const usersAtTheBeginning = await User.find({})
+
+    const newUser = {
+      username: "ie",
+      name: "onyango",
+      password: "iweufhwejfwo"
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await User.find({})
+    assert.strictEqual(usersAtTheBeginning.length, usersAtEnd.length)
+  })
+
+  test('Creation of password with less characters', async () => {
+    const usersAtTheBeginning = await User.find({})
+
+    const newUser = {
+      username: "Fredericko",
+      name: "Fredrick",
+      password: "er"
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+      const usersAtTheEnd = await User.find({})
+      assert.strictEqual(usersAtTheBeginning.length, usersAtTheEnd.length)
+  })
+
+  test('Creation of username with an existing username', async ()=> {
+    const usersAtTheBeginning = await User.find({});
+
+    const newUser = {
+      username: 'root',
+      name: 'Onyangi Ogi',
+      password: "eihfiewjhf"
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type',/application\/json/)
+
+    const usersAtTheEnd = await User.find({})
+
+    assert.strictEqual(usersAtTheBeginning.length,usersAtTheEnd.length)
+  })
+
   after(async () => {
     await mongoose.connection.close()
   })
 })
+
+const info = (...params) => {
+  if(process.env.NODE_ENV !== 'test') {
+    console.log(...params)
+  }
+}
+
+const error = (...params) => {
+  if (process.env.NODE_ENV !== 'test') {
+    console.error(...params)
+  }
+}
+
+module.exports = {
+  info, error
+}
