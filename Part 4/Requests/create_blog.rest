@@ -1,5 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyZHJpY2siLCJpZCI6IjY5OTg1NjliMmM4NWQwNjMzYTE3OGY0MyIsImlhdCI6MTc3MTU5MzcxMn0.pJQiD4WzUptOsoBcS5ElM9tEQJ7rUQwqBkah0t9e88Q
 
 {
   "title": "Onyis fourihfdshjfweth thing",
