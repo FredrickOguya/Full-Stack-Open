@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Onyis fourth thing",
-  "author": "Fredrick",
-  "url": "fourth url",
-  "likes": "4483"
+  "title": "Onyis fourihfdshjfweth thing",
+  "author": "Fedrick",
+  "url": "fouth url",
+  "likes": "4983",
+  "userId": "69985520e20beb11b30e2a8e"
 }
