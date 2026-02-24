@@ -125,6 +125,32 @@ test('a blog without a title is not added',async () => {
     assert.strictEqual(blogsAtEnd.length, initialBLogs.length)
 })
 
+test('blog creation fails with 401 if token is not provided', async () => {
+  const newBlog = {
+    title: "Unauthorized Blog",
+    url: 'http://unauthorized.com'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
+})
+
+test('blog creation fails with 401 if token is invalid', async () => {
+  const newBlog = {
+    title: "This has an invalid token",
+    author: "Mwizi",
+    url: "http://kukuibia.com",
+    likes: 10
+  }
+
+  await api
+    .post('/api/blogs')
+    .set('Authorization', 'Bearer invalidity')
+    .send(newBlog)
+    .expect(401)
+})
 
 test('a blog can be deleted by the creator', async () => {
   const newBlog = {
