@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --watch index.js",
-    "test": "NODE_ENV=test node --test"
+    "test": "NODE_ENV=test node --test --test-concurrency=1"  
   },
   "author": "FredrickOguya",
   "license": "ISC",

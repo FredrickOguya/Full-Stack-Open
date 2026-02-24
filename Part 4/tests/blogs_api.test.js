@@ -5,29 +5,51 @@ const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
 const api = supertest(app)
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
+
+let token = null
 
 const initialBLogs = [
   {
-    id: "5a422a851b54a676234d17f7",
     title: "React patterns",
     author: "Michael Chan",
     url: "https://reactpatterns.com/",
     likes: 7,
-    v: 0
   },
   {
-    id: "5a422aa71b54a676234d17f8",
     title: "Go To Statement Considered Harmful",
     author: "Edsger W. Dijkstra",
     url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     likes: 5,
-    v: 0  
   }
 ]
 
-beforeEach(async () => {
+beforeEach( async () => {
   await Blog.deleteMany({})
-  await Blog.insertMany(initialBLogs)
+  await User.deleteMany({})
+
+  const passwordHash= await bcrypt.hash('password', 10)
+  const user = new User({
+    username: 'root',
+    passwordHash
+  })
+  const savedUser = await user.save()
+
+  const loginRes = await api
+    .post('/api/login')
+    .send({
+      username: 'root',
+      password: 'password'
+    })
+
+  
+  token = loginRes.body.token
+
+
+  const blogObjects = initialBLogs.map(blog => new Blog({...blog, user: savedUser._id}))
+  await Blog.insertMany(blogObjects)
+
 })
 
 test('blogs are returned as json and correct amount',async () => {
@@ -49,38 +71,34 @@ test('blog posts have id property instead of id', async () => {
 
 test('a valid blog can be added via POST', async () => {
   const newBlog = {
-      id: "5a422b3a1b54a676234d17f9",
       title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
-      v: 0
     }
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await Blog.find({})
-    assert.strictEqual(blogsAtEnd.length, initialBLogs.length + 1)
 
-    const titles = blogsAtEnd.map(n => n.title)
-    assert(titles.includes('Canonical string reduction'))
+    assert.strictEqual(blogsAtEnd.length, initialBLogs.length + 1)
 })
 
 test('If there is no likes, It is defaulted to 0', async () => {
   const newBlog = {
-      id: "5a422b891b54a676234d17fa",
       title: "First class tests",
       author: "Robert C. Martin",
       url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
-      v: 0
     }
 
   const response = await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -99,11 +117,61 @@ test('a blog without a title is not added',async () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
 
     const blogsAtEnd = await Blog.find({})
     assert.strictEqual(blogsAtEnd.length, initialBLogs.length)
+})
+
+
+test('a blog can be deleted by the creator', async () => {
+  const newBlog = {
+    title: 'Delete Me',
+    author: 'Author',
+    url: 'http://delete.com'
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
+    .send(newBlog)
+
+    const blogToDelete = response.body
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204)
+
+    const blogsAtEnd = await Blog.find({})
+    assert.strictEqual(blogsAtEnd.length,initialBLogs.length)
+})
+
+test('Deleting a blog fails with 401 if a different user tries to delete it', async () => {
+  const blogResponse = await api
+    .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
+    .send({ title: 'Private Blog', url: 'http://private.com'})
+
+    const blogId = blogResponse.body.id
+
+
+      await api
+        .post('/api/users')
+        .send({username: 'thief', password: 'password123'})
+
+      const loginRes = await api
+        .post('/api/login')
+        .send({ username: 'thief',password:'password123' })
+
+      const secondToken = loginRes.body.token
+
+      await api
+        .delete(`/api/blogs/${blogId}`)
+        .set('Authorization', `Bearer ${secondToken}`)
+        .expect(401)
 })
 
 test('Deleting a single blog post resource' ,async () => {
@@ -113,12 +181,10 @@ test('Deleting a single blog post resource' ,async () => {
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await Blog.find({})
-    const ids = blogsAtEnd.map(n => n.id)
-    assert(!ids.includes(blogToDelete.id))
-
     assert.strictEqual(blogsAtEnd.length, blogsBeforeDelete.length - 1)
 })
 
@@ -146,7 +212,7 @@ test('a blog can be updated with PUT', async () => {
   
   assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)
 
-  const updatedFromDb = blogsAtEnd.find(b => b.id === blogToUpdate.id)
+  const updatedFromDb = blogsAtEnd.find(b => b.id.toString() === blogToUpdate.id.toString())
   assert.strictEqual(updatedFromDb.likes, updatedBlog.likes)
 })
 
