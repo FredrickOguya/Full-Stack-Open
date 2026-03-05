@@ -8,7 +8,6 @@ const App = () => {
   const [url, setUrl] = useState('')
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
-  const [likes, setLikes] = useState(0)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -21,7 +20,6 @@ const App = () => {
       url: url,
       title: title,
       author: author,
-      likes: likes
     }
 
     blogService.create(blogObject).then(returnedBlog => {
@@ -29,7 +27,6 @@ const App = () => {
       setUrl('')
       setTitle('')
       setAuthor('')
-      setLikes(0)
     })
   }
 
@@ -121,40 +118,26 @@ const App = () => {
     setAuthor(event.target.value)
   }
 
-  const handleLikesChange = event => {
-    setLikes(event.target.value)
-  }
-
   const blogForm = () => (
       <form onSubmit={addBlog}>
       <div>
         <label>
-          url
-          <input value={url} onChange={handleUrlChange}/>
-        </label>
-      </div>
-      <div>
-        <label>
-          Title
+          Title:
           <input value={title} onChange={handleTitleChange}/>
         </label>
       </div>
       <div>
         <label>
-          Author
+          Author:
           <input value={author} onChange={handleAuthorChange}/>
         </label>
-      </div>
+      </div>      
       <div>
         <label>
-          Likes
-          <input value={likes} onChange={handleLikesChange}/>
+          url:
+          <input value={url} onChange={handleUrlChange}/>
         </label>
       </div>
-      
-      
-      
-      
       <button type='submit'>save</button>
     </form>    
   )
@@ -167,7 +150,7 @@ const App = () => {
       {!user && loginForm()}
       {user &&  (
         <div>
-          <p>{user.name} logged <button onClick={handleLogout}>Log Out</button></p>
+          <p>{user.name} logged in <button onClick={handleLogout}>Log Out</button></p>
           {blogForm()}
           <div>{blogs.map(blog => (
             <Blog 
