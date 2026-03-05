@@ -11,23 +11,38 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [error, setError] = useState(null)
 
-
-  const addBlog = event => {
+  const addBlog = async (event) => {
     event.preventDefault()
     const blogObject = {
       url: url,
       title: title,
       author: author,
     }
-
-    blogService.create(blogObject).then(returnedBlog => {
+    try {
+      const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
+      setError(false)
+      setMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
       setUrl('')
       setTitle('')
       setAuthor('')
-    })
+      setTimeout(() => {
+        setError(null)
+        setMessage(null)
+      }, 5000)
+    } catch {
+      setError(true)
+      setMessage("Could not add blog")
+      setTimeout(() => {
+        setError(null)
+        setMessage(null)
+      }, 5000)
+    }
+
+
   }
 
   useEffect(() => {
@@ -57,10 +72,18 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setError(false)
+      setMessage(`You are now logged ${user.name}`)
+      setTimeout(() => {
+        setError(null)
+        setMessage(null)
+      }, 5000)
     } catch {
-      setErrorMessage('wrong credentials')
+      setError(true)
+      setMessage('wrong username or password')
       setTimeout(()=> {
-        setErrorMessage(null)
+        setError(false)
+        setMessage(null)
       }, 5000)
     }
   }
@@ -145,7 +168,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={errorMessage}/>
+      <Notification message={message} error={error}/>
 
       {!user && loginForm()}
       {user &&  (
