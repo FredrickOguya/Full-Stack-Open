@@ -132,7 +132,7 @@ const App = () => {
       const blogWithUser = {...returnedBlog, user: blog.user}
 
       setBlogs(blogs.map(b => b.id !== blog.id ? b : blogWithUser))
-
+ 
     
   }
 
