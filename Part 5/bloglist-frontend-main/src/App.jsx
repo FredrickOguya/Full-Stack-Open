@@ -136,6 +136,21 @@ const App = () => {
     
   }
 
+  const handleBlogDelete = async (blog) => {
+    if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)){
+
+
+
+      try{
+        await blogService.remove(blog.id)
+
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+      } catch (exception) {
+        console.error('Error deleting blog', exception)
+      }
+    }
+  }
+
   const blogForm = () => (
       <Togglable buttonLabel="create new blog">
         <BlogForm createBlog={handleCreateBlog}/>
@@ -157,6 +172,7 @@ const App = () => {
               key={blog.id}
               blog={blog}
               handleLike={handleLike}
+              handleDelete={handleBlogDelete}
             />
 
           ))}</div>
