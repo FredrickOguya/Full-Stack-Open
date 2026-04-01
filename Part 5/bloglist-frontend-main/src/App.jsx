@@ -12,6 +12,21 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [error, setError] = useState(null)
+  useEffect(() => {
+    blogService.getAll().then(blogs =>
+      setBlogs( blogs )
+    )  
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if(loggedUserJSON){
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  },[])
+
 
   const handleCreateBlog = async (blogObject) => {
     try {
@@ -34,20 +49,7 @@ const App = () => {
     }
   }
 
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    if(loggedUserJSON){
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  },[])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -118,7 +120,21 @@ const App = () => {
   
   }
 
+  const handleLike = async (blog) => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes +1,
+      user: blog.user.id
+    }
 
+      const returnedBlog = await blogService.update(blog.id, updatedBlog)
+
+      const blogWithUser = {...returnedBlog, user: blog.user}
+
+      setBlogs(blogs.map(b => b.id !== blog.id ? b : blogWithUser))
+
+    
+  }
 
   const blogForm = () => (
       <Togglable buttonLabel="create new blog">
@@ -140,6 +156,7 @@ const App = () => {
             <Blog 
               key={blog.id}
               blog={blog}
+              handleLike={handleLike}
             />
 
           ))}</div>
