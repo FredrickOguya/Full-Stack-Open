@@ -15,7 +15,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const App = () => {
     } catch {
       setError(true)
       setMessage('wrong username or password')
-      setTimeout(()=> {
+      setTimeout(() => {
         setError(false)
         setMessage(null)
       }, 5000)
@@ -86,38 +86,37 @@ const App = () => {
 
   const loginForm = () => {
 
-      return (
-        
-        <div>
-          <h2>Log in to application</h2>
-          <form onSubmit={handleLogin}>
-            <div>
-              <label>
-              username
-                <input
-                  type='text'
-                  value={username}
-                  onChange={({ target })=> setUsername(target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                password
-                <input
-                  type='text'
-                  value={password}
-                  onChange={({ target }) => setPassword(target.value)}
-                />
-              </label>
-            </div>
-            <button type='submit'>login</button>
-          </form>
-        </div>
-      )
+    return (
+      <div>
+        <h2>Log in to application</h2>
+        <form onSubmit={handleLogin}>
+          <div>
+            <label>
+            username
+              <input
+                type='text'
+                value={username}
+                onChange={({ target }) => setUsername(target.value)}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              password
+              <input
+                type='text'
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
+              />
+            </label>
+          </div>
+          <button type='submit'>login</button>
+        </form>
+      </div>
+    )
 
 
-  
+
   }
 
   const handleLike = async (blog) => {
@@ -127,13 +126,11 @@ const App = () => {
       user: blog.user.id
     }
 
-      const returnedBlog = await blogService.update(blog.id, updatedBlog)
+    const returnedBlog = await blogService.update(blog.id, updatedBlog)
 
-      const blogWithUser = {...returnedBlog, user: blog.user}
+    const blogWithUser = { ...returnedBlog, user: blog.user }
 
-      setBlogs(blogs.map(b => b.id !== blog.id ? b : blogWithUser))
- 
-    
+    setBlogs(blogs.map(b => b.id !== blog.id ? b : blogWithUser))
   }
 
   const handleBlogDelete = async (blog) => {
@@ -152,9 +149,9 @@ const App = () => {
   }
 
   const blogForm = () => (
-      <Togglable buttonLabel="create new blog">
-        <BlogForm createBlog={handleCreateBlog}/>
-      </Togglable>   
+    <Togglable buttonLabel="create new blog">
+      <BlogForm createBlog={handleCreateBlog}/>
+    </Togglable>
   )
 
   return (
@@ -168,7 +165,7 @@ const App = () => {
           <p>{user.name} logged in <button onClick={handleLogout}>Log Out</button></p>
           {blogForm()}
           <div>{blogs.toSorted((a, b) => b.likes - a.likes).map(blog => (
-            <Blog 
+            <Blog
               key={blog.id}
               blog={blog}
               handleLike={handleLike}
