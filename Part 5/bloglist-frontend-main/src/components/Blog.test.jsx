@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
 import userEvent from '@testing-library/user-event'
 import { expect, vi } from 'vitest'
+import BlogForm from './BlogForm'
 
 
 
@@ -73,4 +74,30 @@ test('if the like button is clicked twice, the prop is received twice', async ()
   await user.click(likeButton)
 
   expect(mockHandler.mock.calls).toHaveLength(2)
+})
+
+test('Blog calls the event handler with the right details when anew blog is created', async () => {
+  const createBlog = vi.fn()
+  const user = userEvent.setup()
+
+  render(<BlogForm createBlog={createBlog}/>)
+
+  const titleInput = screen.getByPlaceholderText('Enter the title')
+  const authorInput = screen.getByPlaceholderText('Enter the author`s name')
+  const urlInput = screen.getByPlaceholderText('Enter the url')
+  const saveButton = screen.getByText('save')
+
+  await user.type(titleInput, 'tester of form')
+  await user.type(authorInput,'Fredrick Onyango')
+  await user.type(urlInput,'http://formtester.com')
+
+  await user.click(saveButton)
+
+  expect(createBlog.mock.calls).toHaveLength(1)
+
+  const submittedBlog = createBlog.mock.calls[0][0]
+
+  expect(submittedBlog.title).toBe('tester of form')
+  expect(submittedBlog.author).toBe('Fredrick Onyango')
+  expect(submittedBlog.url).toBe('http://formtester.com')
 })
