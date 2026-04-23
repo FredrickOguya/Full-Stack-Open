@@ -49,3 +49,28 @@ test('blog details (url and likes) are shown when the view button is clicked', a
   expect(likesElement).toBeVisible()
 
 })
+
+test('if the like button is clicked twice, the prop is received twice', async () => {
+  const blog = {
+    title: 'Testing twice clicking',
+    author: 'Onyango Fredrick',
+    url: 'https://twiceclicking.com',
+    likes: 6,
+    user: { name: 'testing onyi' }
+  }
+
+  const mockHandler = vi.fn()
+
+  render(<Blog blog={blog} handleDelete={mockHandler} handleLike={mockHandler}/>)
+
+  const user = userEvent.setup()
+
+  const showButton = screen.getByText('view')
+  await user.click(showButton)
+
+  const likeButton = screen.getByText('like')
+  await user.click(likeButton)
+  await user.click(likeButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
+})
