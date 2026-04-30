@@ -3,7 +3,6 @@ const { loginWith } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
-    await page.goto('http://localhost:5173')
     await request.post('http://localhost:3003/api/testing/reset')
     await request.post('http://localhost:3003/api/users', {
       data: {
@@ -12,6 +11,8 @@ describe('Blog app', () => {
         password: "WsxfT"
       }
     })
+
+    await page.goto('http://localhost:5173')
 
   })
 
@@ -24,6 +25,7 @@ describe('Blog app', () => {
   })
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
+      await page.getByRole('button', { name: 'login' }).click()
       await loginWith(page, "Fredrick", "WsxfT")
 
       await expect(page.getByText('Difre logged in')).toBeVisible()
@@ -34,5 +36,31 @@ describe('Blog app', () => {
       await expect(page.locator('.error')).toContainText('wrong username or password')
     })
   })
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await page.getByRole('button', { name: 'login' }).click()
+
+      await loginWith(page, 'Fredrick', 'WsxfT')
+      await page.getByText('Difre logged in').waitFor()
+      
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+
+      await page.getByRole('button', {name: 'create new blog'}).click()
+
+      await page.getByLabel('Title:').fill('Hello to you')
+      await page.getByLabel('Author:').fill('Difre Onyi')
+      await page.getByLabel('url:').fill('http:/hello.com')
+
+      await page.getByRole('button', {name: 'save'}).click()
+
+      const newBlog = page.getByText('Hello to you')
+      await expect(newBlog.last()).toBeVisible()
+    })
+  })
+
   
 })
+
