@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith } = require('./helper')
+const { loginWith, createBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -39,7 +39,6 @@ describe('Blog app', () => {
 
   describe('When logged in', () => {
     beforeEach(async ({ page }) => {
-      await page.getByRole('button', { name: 'login' }).click()
 
       await loginWith(page, 'Fredrick', 'WsxfT')
       await page.getByText('Difre logged in').waitFor()
@@ -48,16 +47,25 @@ describe('Blog app', () => {
 
     test('a new blog can be created', async ({ page }) => {
 
-      await page.getByRole('button', {name: 'create new blog'}).click()
+      await createBlog(page, 'Hello yourself', 'Onyango Fred', 'onti.com')
 
-      await page.getByLabel('Title:').fill('Hello to you')
-      await page.getByLabel('Author:').fill('Difre Onyi')
-      await page.getByLabel('url:').fill('http:/hello.com')
+      await expect(page.getByText('Hello yourself').last()).toBeVisible()
+    })
 
-      await page.getByRole('button', {name: 'save'}).click()
+    test.only('a blog can be liked', async ({ page }) => {
+      
+      await createBlog(page, 'Hello yourself', 'Onyango Fred', 'onti.com')
 
-      const newBlog = page.getByText('Hello to you')
-      await expect(newBlog.last()).toBeVisible()
+        await expect(page.getByText(`a new blog Hello yourself by Onyango Fred added`)).toBeVisible()
+
+
+      await page.getByRole('button', { name: 'view'}).click()
+
+
+
+      await page.getByRole('button', { name: 'like'}).click()
+      
+      await expect(page.getByText('likes 1')).toBeVisible()
     })
   })
 
