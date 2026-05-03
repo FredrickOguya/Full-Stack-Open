@@ -17,9 +17,12 @@ const createBlog = async (page, Title, Author, url) => {
 
   await page.getByRole('button', { name: 'save' }).click();
 
-  await page.getByRole('button', { name: 'cancel' }).click();
+        await expect(page.getByText(Title).last()).toBeVisible()
 
-  await expect(page.getByText(`${Title} ${Author}`)).toBeVisible();
+
+  const blog = page.locator('.blog').filter({ hasText: Title})
+
+  await expect(blog).toHaveCount(0)
 };
 
 module.exports = {

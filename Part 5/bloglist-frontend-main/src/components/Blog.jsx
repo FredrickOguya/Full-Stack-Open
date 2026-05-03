@@ -21,15 +21,15 @@ const Blog = ({ blog, handleLike,handleDelete }) => {
   return (
     <div style={blogStyle}>
       <div>
-        {blog.title} {blog.author}
+        <p>{blog.title} {blog.author}</p>
         <button onClick={toggleVisibility}>{label}</button>
       </div>
       <div style={showWhenVisible}>
         <p>{blog.url}</p>
-        <p>
-          likes {blog.likes}
+        <div>
+          <p>likes {blog.likes}</p>
           <button onClick={() => handleLike(blog)}>like</button>
-        </p>
+        </div>
         <p>{blog.user.name}</p>
         <button
           style={{ backgroundColor: 'dodgerblue', color: 'white' }}
