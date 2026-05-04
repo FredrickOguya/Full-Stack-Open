@@ -11,6 +11,20 @@ describe('Blog app', () => {
         password: "WsxfT"
       }
     })
+    await request.post('http://localhost:3003/api/users', {
+      data: {
+        username: "1st_user",
+        name: "Onyi",
+        password: "password_1"
+      }
+    })
+    await request.post('http://localhost:3003/api/users', {
+      data: {
+        username: "2nd_user",
+        name: "Mzii",
+        password: "password_2"
+      }
+    })
 
     await page.goto('http://localhost:5173')
 
@@ -84,6 +98,19 @@ describe('Blog app', () => {
     })
   })
 
+  test.only('only the user who created a blog can see the delete button', async ({ page }) => {
+    await loginWith(page, '1st_user', 'password_1')
+    await createBlog(page, 'Security Test Blog', 'Author A', 'http://Author 1')
+
+    await page.getByRole('button', { name: 'Log Out'}).click()
+
+    await loginWith(page, '2nd_user', 'password_2')
+
+    const blogElement = page.locator('.blog').filter({ hasText: 'Security Test Blog' })
+
+
+    await expect(blogElement.getByRole('button', { name: 'delete' })).not.toBeVisible()
+  })
   
 })
 
