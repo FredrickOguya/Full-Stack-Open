@@ -21,7 +21,7 @@ const Blog = ({ blog, handleLike,handleDelete,user }) => {
     marginBottom: 5
   }
   return (
-    <div style={blogStyle}>
+    <div className='' style={blogStyle}>
       <div>
         <p>{blog.title} {blog.author}</p>
         <button onClick={toggleVisibility}>{label}</button>

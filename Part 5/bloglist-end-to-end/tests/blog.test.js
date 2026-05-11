@@ -11,20 +11,20 @@ describe('Blog app', () => {
         password: "WsxfT"
       }
     })
-    await request.post('http://localhost:3003/api/users', {
-      data: {
-        username: "1st_user",
-        name: "Onyi",
-        password: "password_1"
-      }
-    })
-    await request.post('http://localhost:3003/api/users', {
-      data: {
-        username: "2nd_user",
-        name: "Mzii",
-        password: "password_2"
-      }
-    })
+    // await request.post('http://localhost:3003/api/users', {
+    //   data: {
+    //     username: "1st_user",
+    //     name: "Onyi",
+    //     password: "password_1"
+    //   }
+    // })
+    // await request.post('http://localhost:3003/api/users', {
+    //   data: {
+    //     username: "2nd_user",
+    //     name: "Mzii",
+    //     password: "password_2"
+    //   }
+    // })
 
     await page.goto('http://localhost:5173')
 
@@ -53,6 +53,7 @@ describe('Blog app', () => {
 
   describe('When logged in', () => {
     beforeEach(async ({ page }) => {
+      await page.getByRole('button', { name: 'login' }).click()
 
       await loginWith(page, 'Fredrick', 'WsxfT')
       await page.getByText('Difre logged in').waitFor()
@@ -96,9 +97,43 @@ describe('Blog app', () => {
       
       await expect(blog).toHaveCount(0)
     })
+
+    test.only('blogs are sorted by likes in descending order', async ({ page }) => {
+      await page.getByRole('button', { name: 'create new blog' }).click();
+      await createBlog(page, 'Real Things', 'Kenneth Maribe', 'me.com');
+      await createBlog(page, 'The second thing', 'Lennar Omika', 'you.com');
+      await createBlog(page, 'Third stuff', 'Me Myself', 'three.com');
+
+      const blog1 = page.locator('.blog').filter({ hasText: 'Real Things' });
+      const blog2 = page.locator('.blog').filter({ hasText: 'The second thing' });
+      const blog3 = page.locator('.blog').filter({ hasText: 'Third stuff' });
+
+      await blog1.getByRole('button', { name: 'view' }).click();
+      await blog2.getByRole('button', { name: 'view' }).click();
+      await blog3.getByRole('button', { name: 'view' }).click();
+
+      const likeBtn3 = blog3.getByRole('button', { name: 'like' });
+      await likeBtn3.click();
+      await expect(page.getByText('likes 1').first()).toBeVisible();
+      await likeBtn3.click();
+      await expect(page.getByText('likes 2').first()).toBeVisible();
+
+      const likeBtn1 = blog1.getByRole('button', { name: 'like' });
+      await likeBtn1.click();
+      await expect(page.getByText('likes 1').first()).toBeVisible();
+
+
+      await page.waitForTimeout(500); 
+
+      const blogLocators = page.locator('.blog');
+
+      await expect(blogLocators.nth(0)).toContainText('Third stuff');
+      await expect(blogLocators.nth(1)).toContainText('Real Things');
+      await expect(blogLocators.nth(2)).toContainText('The second thing');
+    });
   })
 
-  test.only('only the user who created a blog can see the delete button', async ({ page }) => {
+  test('only the user who created a blog can see the delete button', async ({ page }) => {
     await loginWith(page, '1st_user', 'password_1')
     await createBlog(page, 'Security Test Blog', 'Author A', 'http://Author 1')
 
@@ -111,6 +146,8 @@ describe('Blog app', () => {
 
     await expect(blogElement.getByRole('button', { name: 'delete' })).not.toBeVisible()
   })
+
+
   
 })
 

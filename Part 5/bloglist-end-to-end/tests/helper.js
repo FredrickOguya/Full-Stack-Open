@@ -9,15 +9,14 @@ const loginWith = async (page, username, password) => {
 }
 
 const createBlog = async (page, Title, Author, url) => {
-  await page.getByRole('button', { name: 'create new blog' }).click();
-
+  
   await page.getByLabel('Title:').fill(Title);
   await page.getByLabel('Author:').fill(Author);
   await page.getByLabel('url:').fill(url);
 
   await page.getByRole('button', { name: 'save' }).click();
 
-        await expect(page.getByText(Title).last()).toBeVisible()
+  await expect(page.getByText(Title).last()).toBeVisible()
 
 
   const blog = page.locator('.blog').filter({ hasText: Title})
