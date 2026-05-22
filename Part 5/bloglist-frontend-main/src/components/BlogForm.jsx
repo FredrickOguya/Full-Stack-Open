@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Togglable from './Togglable'
 
 const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
@@ -18,27 +19,30 @@ const BlogForm = ({ createBlog }) => {
     setAuthor('')
     setUrl('')
   }
-  return (<form onSubmit={addBlog}>
-    <div>
-      <label>
-        Title:
-        <input value={title} onChange={({ target }) => setTitle(target.value)} placeholder='Enter the title'/>
-      </label>
-    </div>
-    <div>
-      <label>
-        Author:
-        <input value={author} onChange={({ target }) => setAuthor(target.value)} placeholder='Enter the author`s name'/>
-      </label>
-    </div>
-    <div>
-      <label>
-        url:
-        <input value={url} onChange={({ target }) => setUrl(target.value)} placeholder='Enter the url'/>
-      </label>
-    </div>
-    <button type='submit'>save</button>
-  </form>
+  return (
+    <Togglable buttonLabel="create new blog">
+      <form onSubmit={addBlog}>
+        <div>
+          <label>
+            Title:
+            <input value={title} onChange={({ target }) => setTitle(target.value)} placeholder='Enter the title'/>
+          </label>
+        </div>
+        <div>
+          <label>
+            Author:
+            <input value={author} onChange={({ target }) => setAuthor(target.value)} placeholder='Enter the author`s name'/>
+          </label>
+        </div>
+        <div>
+          <label>
+            url:
+            <input value={url} onChange={({ target }) => setUrl(target.value)} placeholder='Enter the url'/>
+          </label>
+        </div>
+        <button type='submit'>save</button>
+      </form>
+    </Togglable>
   )
 }
 

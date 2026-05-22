@@ -5,13 +5,19 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link, useNavigate
+} from 'react-router-dom'
+import Blogs from './components/Blogs'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [error, setError] = useState(null)
+  const navigate = useNavigate()
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -51,11 +57,10 @@ const App = () => {
 
 
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
+  const handleLogin = async (credentials) => {
 
     try {
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login(credentials)
 
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
@@ -64,10 +69,9 @@ const App = () => {
       blogService.setToken(user.token)
 
       setUser(user)
-      setUsername('')
-      setPassword('')
       setError(false)
       setMessage(`You are now logged ${user.name}`)
+      navigate('/')
       setTimeout(() => {
         setError(null)
         setMessage(null)
@@ -85,42 +89,9 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
+    navigate('/login')
   }
 
-  const loginForm = () => {
-
-    return (
-      <div>
-        <h2>Log in to application</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label>
-            username
-              <input
-                type='text'
-                value={username}
-                onChange={({ target }) => setUsername(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              password
-              <input
-                type='text'
-                value={password}
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </label>
-          </div>
-          <button type='submit'>login</button>
-        </form>
-      </div>
-    )
-
-
-
-  }
 
   const handleLike = async (blog) => {
     const updatedBlog = {
@@ -151,34 +122,46 @@ const App = () => {
     }
   }
 
-  const blogForm = () => (
-    <Togglable buttonLabel="create new blog">
-      <BlogForm createBlog={handleCreateBlog}/>
-    </Togglable>
-  )
 
+
+
+
+  const padding = {
+    padding: 5
+  }
   return (
     <div>
-      <h2>blogs</h2>
-      <Notification message={message} error={error}/>
+      <div>
+        {user ? (
+          <div>
+            <Link style={padding} to="/">blogs</Link>
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        ) : (
+          <div>
+            <Link style={padding} to="/">blogs</Link>
+            <Link style={padding} to="login">login</Link>
+          </div>
+        )}
 
-      {!user && loginForm()}
-      {user &&  (
-        <div>
-          <p>{user.name} logged in <button onClick={handleLogout}>Log Out</button></p>
-          {blogForm()}
-          <div>{blogs.toSorted((a, b) => b.likes - a.likes).map(blog => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              handleLike={handleLike}
-              handleDelete={handleBlogDelete}
-              user={user}
-            />
+      </div>
 
-          ))}</div>
-        </div>
-      )}
+      <Routes>
+        <Route path='/' element={
+          <Blogs
+            message={message}
+            error={error}
+            user={user}
+            blogs={blogs}
+            handleLike={handleLike}
+            handleBlogDelete={handleBlogDelete}
+            handleCreateBlog={handleCreateBlog}
+          />
+        } />
+        <Route path='/login' element={
+          <LoginForm handleLogin={handleLogin} user={user} message={message} error={error}/>
+        } />
+      </Routes>
     </div>
   )
 }
