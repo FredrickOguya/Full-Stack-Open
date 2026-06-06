@@ -1,17 +1,12 @@
-import { useState } from 'react'
-
 const Blog = ({ blog, handleLike,handleDelete,user }) => {
-  const [visible, setVisible] = useState(false)
 
-  const label = visible ? 'hide' : 'view'
-
-  const showWhenVisible = { display: visible ? '' : 'none' }
+  if(!blog) {
+    return <div>Loading...</div>
+  }
 
   const showRemoveButton = blog.user?.username === user?.username
 
-  const toggleVisibility = () => {
-    setVisible(!visible)
-  }
+
 
   const blogStyle = {
     paddingTop: 10,
@@ -21,12 +16,11 @@ const Blog = ({ blog, handleLike,handleDelete,user }) => {
     marginBottom: 5
   }
   return (
-    <div className='' style={blogStyle}>
+    <div style={blogStyle}>
       <div>
         <p>{blog.title} {blog.author}</p>
-        <button onClick={toggleVisibility}>{label}</button>
       </div>
-      <div style={showWhenVisible}>
+      <div >
         <p>{blog.url}</p>
         <div>
           <p>likes {blog.likes}</p>

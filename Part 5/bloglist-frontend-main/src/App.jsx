@@ -8,7 +8,8 @@ import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link, useNavigate
+  Routes, Route, Link, useNavigate,
+  useMatch
 } from 'react-router-dom'
 import Blogs from './components/Blogs'
 
@@ -116,6 +117,8 @@ const App = () => {
         await blogService.remove(blog.id)
 
         setBlogs(blogs.filter(b => b.id !== blog.id))
+
+        navigate('/')
       } catch (exception) {
         console.error('Error deleting blog', exception)
       }
@@ -129,6 +132,9 @@ const App = () => {
   const padding = {
     padding: 5
   }
+
+  const match = useMatch('/blogs/:id')
+  const blog = match ? blogs.find(b => b.id === match.params.id) : null
   return (
     <div>
       <div>
@@ -161,6 +167,9 @@ const App = () => {
         <Route path='/login' element={
           <LoginForm handleLogin={handleLogin} user={user} message={message} error={error}/>
         } />
+        <Route path='/blogs/:id' element={
+          <Blog blog={blog} handleDelete={handleBlogDelete} handleLike={handleLike} user={user} />
+        }/>
       </Routes>
     </div>
   )
