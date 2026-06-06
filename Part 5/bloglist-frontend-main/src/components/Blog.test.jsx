@@ -4,77 +4,121 @@ import userEvent from '@testing-library/user-event'
 import { expect, vi } from 'vitest'
 import BlogForm from './BlogForm'
 
-
-
-test('renders title and author', () => {
+test('unauthenticated users can see blog info and likes but cannot see the buttons', () => {
   const blog = {
-    user:{
+    title: 'Testing dis ting',
+    author: 'Onyi ofcourse',
+    url: 'https://realnigga',
+    likes: 40,
+    user: {
+      username: 'Fredrick',
       name: 'Fredrick'
-    },
-    title: 'I am here',
-    author: 'Fredrick Onyango',
-    url: 'http://testing.com',
-    likes: 30
+    }
   }
-  render(<Blog blog={blog}/>)
 
-  const titleElement = screen.getByText('I am here Fredrick Onyango')
-  const urlElement = screen.queryByText('http://testing.com')
-  const likesElement = screen.getByText(/likes/i)
+  render(<Blog blog={blog} user={null}/>)
 
-  expect(titleElement).toBeInTheDocument()
-  expect(urlElement.parentElement).toHaveStyle('display:none')
-  expect(likesElement).not.toBeVisible()
-})
-
-test('blog details (url and likes) are shown when the view button is clicked', async () => {
-  const blog = {
-    title: 'Locking back in',
-    author: 'Fredrick Onyango',
-    url: 'https://fredasshi.com',
-    likes: 7,
-    user: { name: 'Test Admin' }
-  }
-  const mockHandler = vi.fn()
-
-  render(<Blog blog={blog} handleLike={mockHandler} handleDelete={mockHandler}/>)
-
-  const user = userEvent.setup()
-  const button = screen.getByText('view')
-  await user.click(button)
-
-  const urlElement = screen.queryByText('https://fredasshi.com')
-  const likesElement = screen.getByText(/likes/i)
-
-  expect(urlElement).toBeVisible()
-  expect(likesElement).toBeVisible()
+  expect(screen.getByText(/Testing dis ting/i)).toBeInTheDocument()
+  expect(screen.getByText(/likes 40/i)).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /like/i })).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /delete/i })).not.toBeInTheDocument()
 
 })
 
-test('if the like button is clicked twice, the prop is received twice', async () => {
+test('authenticated users who are not the blog`s creator are shown only the like button', () => {
   const blog = {
-    title: 'Testing twice clicking',
-    author: 'Onyango Fredrick',
-    url: 'https://twiceclicking.com',
-    likes: 6,
-    user: { name: 'testing onyi' }
+    title: 'Testing dis ting',
+    author: 'Onyi ofcourse',
+    url: 'https://realnigga',
+    likes: 40,
+    user: {
+      name: 'fredi',
+    }
+  }
+  const user = {
+    username: 'Fredrick',
+    password: 'WsxfT'
+  }
+
+  render(<Blog blog={blog} user={user}/>)
+
+  expect(screen.getByText(/Testing dis ting/i)).toBeInTheDocument()
+  expect(screen.getByText(/likes 40/i)).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /like/i })).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /delete/i })).not.toBeInTheDocument()
+
+
+})
+
+test('The blog`s creator is shown the delete button', () => {
+  const blog = {
+    title: 'Testing dis ting',
+    author: 'Onyi ofcourse',
+    url: 'https://realnigga',
+    likes: 40,
+    user: {
+      username: 'Fredrick',
+      name: 'Fredrick',
+    }
+  }
+  const user = {
+    username: 'Fredrick',
+    name: 'Fredrick'
+  }
+
+  render(<Blog blog={blog} user={user}/>)
+
+  expect(screen.getByText(/Testing dis ting/i)).toBeInTheDocument()
+  expect(screen.getByText(/likes 40/i)).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /like/i })).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /delete/i })).toBeInTheDocument()
+})
+
+
+test('authenticated users can click the like button and the likes increase',async () => {
+  const blog = {
+    title: 'Testing dis ting',
+    author: 'Onyi ofcourse',
+    url: 'https://realnigga',
+    likes: 40,
+    user: {
+      name: 'Fredrick',
+      username: 'Fredrick'
+    }
+  }
+  const user = {
+    name: 'Fredrick',
+    username: 'Fredrick'
   }
 
   const mockHandler = vi.fn()
 
-  render(<Blog blog={blog} handleDelete={mockHandler} handleLike={mockHandler}/>)
+  render(<Blog blog={blog} user={user} handleDelete={mockHandler} handleLike={mockHandler}/>)
 
-  const user = userEvent.setup()
-
-  const showButton = screen.getByText('view')
-  await user.click(showButton)
+  const clicker = userEvent.setup()
 
   const likeButton = screen.getByText('like')
-  await user.click(likeButton)
-  await user.click(likeButton)
+  await clicker.click(likeButton)
+  await clicker.click(likeButton)
 
   expect(mockHandler.mock.calls).toHaveLength(2)
+
+  expect(screen.getByText(/Testing dis ting/i)).toBeInTheDocument()
+  expect(screen.getByText(/likes 40/i)).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /like/i })).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /delete/i })).toBeInTheDocument()
+
+
 })
+
+
+
+
+
+
+
+
+
 
 test('Blog calls the event handler with the right details when anew blog is created', async () => {
   const createBlog = vi.fn()
