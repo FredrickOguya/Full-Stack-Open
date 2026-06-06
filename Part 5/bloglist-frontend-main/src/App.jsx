@@ -141,12 +141,13 @@ const App = () => {
         {user ? (
           <div>
             <Link style={padding} to="/">blogs</Link>
+            <Link style={padding} to="/create new blog">create new blog</Link>
             <button onClick={handleLogout}>Logout</button>
           </div>
         ) : (
           <div>
             <Link style={padding} to="/">blogs</Link>
-            <Link style={padding} to="login">login</Link>
+            <Link style={padding} to="/login">login</Link>
           </div>
         )}
 
@@ -166,6 +167,10 @@ const App = () => {
         } />
         <Route path='/login' element={
           <LoginForm handleLogin={handleLogin} user={user} message={message} error={error}/>
+        } />
+        <Route path='/create new blog' element={
+          <BlogForm message={message} error={error} createBlog={handleCreateBlog}/>
+
         } />
         <Route path='/blogs/:id' element={
           <Blog blog={blog} handleDelete={handleBlogDelete} handleLike={handleLike} user={user} />

@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import Togglable from './Togglable'
+import Notification from './Notification'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = ({ createBlog, message, error }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
   const addBlog = (event) => {
     event.preventDefault()
-
     createBlog({
       title: title,
       author: author,
@@ -20,7 +20,8 @@ const BlogForm = ({ createBlog }) => {
     setUrl('')
   }
   return (
-    <Togglable buttonLabel="create new blog">
+    <div>
+      <Notification message={message} error={error}/>
       <form onSubmit={addBlog}>
         <div>
           <label>
@@ -42,7 +43,7 @@ const BlogForm = ({ createBlog }) => {
         </div>
         <button type='submit'>save</button>
       </form>
-    </Togglable>
+    </div>
   )
 }
 
