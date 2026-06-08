@@ -33,30 +33,32 @@ describe('Blog app', () => {
   test('Login form is shown', async ({ page }) => {
 
     await expect(page.getByText('blogs')).toBeVisible()
-    await expect(page.getByText('Log in to application')).toBeVisible()
+    await expect(page.getByText('login')).toBeVisible()
+    await page.getByText('login').click()
     await expect(page.getByLabel('username')).toBeVisible()
     await expect(page.getByLabel('password')).toBeVisible()
   })
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await page.getByRole('button', { name: 'login' }).click()
+      await page.getByRole('link', { name: 'login' }).click()
       await loginWith(page, "Fredrick", "WsxfT")
 
-      await expect(page.getByText('Difre logged in')).toBeVisible()
+      await expect(page.getByText('You are now logged Difre')).toBeVisible()
     })
-    test('login fails with wrong password', async ({ page }) => {
-      await loginWith(page, "Fredrick", "bad")
+    test('Login fails if the username/ password is incorect', async ({ page }) => {
+      await page.getByRole('link', { name: 'login' }).click()
+      await loginWith(page, "Fredrick", "Wsxf")
 
-      await expect(page.locator('.error')).toContainText('wrong username or password')
+      await expect(page.getByText('wrong username or password')).toBeVisible()
     })
   })
 
   describe('When logged in', () => {
     beforeEach(async ({ page }) => {
-      await page.getByRole('button', { name: 'login' }).click()
+      await page.getByRole('link', { name: 'login' }).click()
 
       await loginWith(page, 'Fredrick', 'WsxfT')
-      await page.getByText('Difre logged in').waitFor()
+      await page.getByText('You are now logged Difre').waitFor()
       
     })
 
@@ -65,20 +67,20 @@ describe('Blog app', () => {
       await createBlog(page, 'Hello yourself', 'Onyango Fred', 'onti.com')
     })
 
-    test('a blog can be liked', async ({ page }) => {
+    test.only('a blog can be liked', async ({ page }) => {
       
       await createBlog(page, 'Hello yourself', 'Onyango Fred', 'onti.com')
 
-        await expect(page.getByText(`a new blog Hello yourself by Onyango Fred added`)).toBeVisible()
 
+      await page.getByRole('link', { name: 'blogs' }).click()
 
-      await page.getByRole('button', { name: 'view'}).click()
+      await page.getByRole('link', { name: 'Hello yourself Onyango Fred'}).click()
 
 
 
       await page.getByRole('button', { name: 'like'}).click()
       
-      await expect(page.getByText('likes 1')).toBeVisible()
+      await expect(page.getByText(/likes 1/i)).toBeVisible()
     })
 
     test('a blog can be deleted by the user who created it', async ({ page }) => {
@@ -98,7 +100,7 @@ describe('Blog app', () => {
       await expect(blog).toHaveCount(0)
     })
 
-    test.only('blogs are sorted by likes in descending order', async ({ page }) => {
+    test('blogs are sorted by likes in descending order', async ({ page }) => {
       await page.getByRole('button', { name: 'create new blog' }).click();
       await createBlog(page, 'Real Things', 'Kenneth Maribe', 'me.com');
       await createBlog(page, 'The second thing', 'Lennar Omika', 'you.com');

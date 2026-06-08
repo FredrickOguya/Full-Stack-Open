@@ -7,7 +7,6 @@ const LoginForm = ({ handleLogin,user,message,error } ) => {
   const [password, setPassword] = useState('')
 
   const handleSubmit = (event) => {
-
     event.preventDefault()
     handleLogin({
       username,
@@ -26,6 +25,7 @@ const LoginForm = ({ handleLogin,user,message,error } ) => {
     )
   } else {
     return <div>
+      <Notification message={message} error={error}/>
       <h2>Log in to application</h2>
       <form onSubmit={handleSubmit}>
         <div>

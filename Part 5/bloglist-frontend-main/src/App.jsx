@@ -72,11 +72,14 @@ const App = () => {
       setUser(user)
       setError(false)
       setMessage(`You are now logged ${user.name}`)
-      navigate('/')
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
       setTimeout(() => {
         setError(null)
         setMessage(null)
       }, 5000)
+
     } catch {
       setError(true)
       setMessage('wrong username or password')
