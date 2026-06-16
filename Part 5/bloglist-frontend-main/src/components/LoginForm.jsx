@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Notification from './Notification'
 import { Input, Button } from '@mui/material'
 
-const LoginForm = ({ handleLogin,user,message,error } ) => {
+const LoginForm = ({ handleLogin,notification } ) => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -18,15 +18,9 @@ const LoginForm = ({ handleLogin,user,message,error } ) => {
   }
 
 
-  {if(user){
-    return (
-      <div>
-        <Notification message={message} error={error}/>
-      </div>
-    )
-  } else {
+  {
     return <div>
-      <Notification message={message} error={error}/>
+      <Notification notification={notification}/>
       <h2>Log in to application</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -55,6 +49,6 @@ const LoginForm = ({ handleLogin,user,message,error } ) => {
 
 
 
-}
+
 
 export default LoginForm

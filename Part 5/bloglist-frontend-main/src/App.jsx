@@ -12,12 +12,12 @@ import {
   useMatch
 } from 'react-router-dom'
 import Blogs from './components/Blogs'
-
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState(null)
-  const [error, setError] = useState(null)
+  const [notification, setNotification] = useState(null)
+
   const navigate = useNavigate()
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -40,18 +40,24 @@ const App = () => {
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
 
-      setError(false)
-      setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+      setNotification({
+        text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+        type: 'success'
+      })
+      navigate('/')
 
       setTimeout(() => {
-        setMessage(null)
+        setNotification(null)
       }, 5000)
+
     } catch{
-      setError(true)
-      setMessage('Error adding blog')
+      setNotification({
+        text: 'Error adding blog',
+        type: 'error'
+
+      })
       setTimeout(() => {
-        setError(null)
-        setMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -70,22 +76,24 @@ const App = () => {
       blogService.setToken(user.token)
 
       setUser(user)
-      setError(false)
-      setMessage(`You are now logged ${user.name}`)
+      setNotification({
+        text: `You are now logged ${user.name}`,
+        type: 'success'
+      })
       setTimeout(() => {
         navigate('/')
       }, 2000)
       setTimeout(() => {
-        setError(null)
-        setMessage(null)
+        setNotification(null)
       }, 5000)
 
     } catch {
-      setError(true)
-      setMessage('wrong username or password')
+      setNotification({
+        text: 'wrong username or password',
+        type: 'error'
+      })
       setTimeout(() => {
-        setError(false)
-        setMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -143,12 +151,20 @@ const App = () => {
       <div>
         {user ? (
           <div>
-            <Link style={padding} to="/">blogs</Link>
-            <Link style={padding} to="/create new blog">create new blog</Link>
-            <button onClick={handleLogout}>Logout</button>
+            <Box>
+              <AppBar position='static'>
+                <Toolbar>
+                  <Typography variant='h5' component='div' sx={{ flexGrow: 1 }}>Blog App</Typography>
+                  <Button component={Link} style={ padding } color='inherit' to="/">blogs</Button>
+                  <Button component={Link} style={ padding } color='inherit' to="/create-new-blog">create new blog</Button>
+                  <Button color='inherit' onClick={handleLogout}>Logout</Button>
+                </Toolbar>
+              </AppBar>
+            </Box>
           </div>
         ) : (
           <div>
+
             <Link style={padding} to="/">blogs</Link>
             <Link style={padding} to="/login">login</Link>
           </div>
@@ -156,23 +172,18 @@ const App = () => {
 
       </div>
 
+      <Notification notification={notification}/>
       <Routes>
         <Route path='/' element={
           <Blogs
-            message={message}
-            error={error}
-            user={user}
             blogs={blogs}
-            handleLike={handleLike}
-            handleBlogDelete={handleBlogDelete}
-            handleCreateBlog={handleCreateBlog}
           />
         } />
         <Route path='/login' element={
-          <LoginForm handleLogin={handleLogin} user={user} message={message} error={error}/>
+          <LoginForm handleLogin={handleLogin} user={user} notification={notification}/>
         } />
-        <Route path='/create new blog' element={
-          <BlogForm message={message} error={error} createBlog={handleCreateBlog}/>
+        <Route path='/create-new-blog' element={
+          <BlogForm notification={notification} createBlog={handleCreateBlog}/>
 
         } />
         <Route path='/blogs/:id' element={
