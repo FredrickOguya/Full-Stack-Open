@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Notification from './Notification'
+import { Input, Button } from '@mui/material'
 
 const LoginForm = ({ handleLogin,user,message,error } ) => {
 
@@ -29,26 +30,24 @@ const LoginForm = ({ handleLogin,user,message,error } ) => {
       <h2>Log in to application</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>
-        username
-            <input
-              type='text'
-              value={username}
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </label>
+          <Input
+            type='text'
+            value={username}
+            onChange={({ target }) => setUsername(target.value)}
+            placeholder='username'
+            sx={{ padding:1 }}
+          />
         </div>
         <div>
-          <label>
-          password
-            <input
-              type='text'
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </label>
+          <Input
+            type='text'
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+            placeholder='password'
+            sx={{ padding:1 }}
+          />
         </div>
-        <button type='submit'>login</button>
+        <Button type='submit' variant='contained' style={{ margin: 5 }}>login</Button>
       </form>
     </div>
   }}

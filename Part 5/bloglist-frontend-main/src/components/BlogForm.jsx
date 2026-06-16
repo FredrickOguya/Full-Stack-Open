@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import Togglable from './Togglable'
 import Notification from './Notification'
+import { TextField,Button, Input } from '@mui/material'
+
+
 
 const BlogForm = ({ createBlog, message, error }) => {
   const [title, setTitle] = useState('')
@@ -24,24 +27,39 @@ const BlogForm = ({ createBlog, message, error }) => {
       <Notification message={message} error={error}/>
       <form onSubmit={addBlog}>
         <div>
-          <label>
-            Title:
-            <input value={title} onChange={({ target }) => setTitle(target.value)} placeholder='Enter the title'/>
-          </label>
+          <TextField
+            id='outlined-basic'
+            label='title'
+            variant='outlined'
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+            sx={{ mb:2, mt:2 }}
+          />
         </div>
         <div>
-          <label>
-            Author:
-            <input value={author} onChange={({ target }) => setAuthor(target.value)} placeholder='Enter the author`s name'/>
-          </label>
+          <TextField
+            id='outlined-basic'
+            label='author'
+            variant='outlined'
+            value={title}
+            onChange={({ target }) => setAuthor(target.value)}
+            sx={{ mb:2 }}
+          />
         </div>
         <div>
-          <label>
-            url:
-            <input value={url} onChange={({ target }) => setUrl(target.value)} placeholder='Enter the url'/>
-          </label>
+          <TextField
+            id='outlined-basic'
+            label='url'
+            variant='outlined'
+            value={title}
+            onChange={({ target }) => setUrl(target.value)}
+          />
         </div>
-        <button type='submit'>save</button>
+        <Button
+          variant='contained'
+          type='submit'
+          style={{ marginTop: 10 }}
+        >CREATE</Button>
       </form>
     </div>
   )
