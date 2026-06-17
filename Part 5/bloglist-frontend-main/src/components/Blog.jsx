@@ -1,3 +1,7 @@
+import { Box, Button, Card, CardActions, CardContent, Divider, Typography } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/DeleteOutlined'
+Box
+
 const Blog = ({ blog, handleLike,handleDelete,user }) => {
 
   if(!blog) {
@@ -8,33 +12,90 @@ const Blog = ({ blog, handleLike,handleDelete,user }) => {
 
 
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-  return (
-    <div style={blogStyle}>
-      <div>
-        <p>{blog.title} {blog.author}</p>
-      </div>
-      <div >
-        <p>{blog.url}</p>
-        <div>
-          <p>likes {blog.likes}</p>
-          {user && <button onClick={() => handleLike(blog)}>like</button>}
-        </div>
-        <p>{blog.user.name}</p>
-        {showRemoveButton && (<button
-          style={{ backgroundColor: 'dodgerblue', color: 'white' }}
-          onClick={() => handleDelete(blog)}
-        >delete</button>
-        )}
-      </div>
-    </div>
 
+  return (
+    <Card
+      sx={{
+        maxWidth: 600,
+        mx: 'auto',
+        my: 2,
+        borderRadius: 3,
+        boxShadow: 3,
+        transition: '0.2s',
+        '&:hover': {
+          boxShadow: 6,
+        },
+      }}
+    >
+      <CardContent>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          gutterBottom
+        >
+      by {blog.author}
+        </Typography>
+
+        <Typography
+          variant="h5"
+          sx={{ fontWeight: 600, mb: 1 }}
+        >
+          {blog.title}
+        </Typography>
+
+        <CardActions sx={{ px: 0 }}>
+          <Button
+            size="small"
+            href={blog.url}
+            target="_blank"
+          >
+            Read Blog
+          </Button>
+        </CardActions>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={1}
+        >
+          <Typography variant="body2">
+            👍 {blog.likes} likes
+          </Typography>
+
+          {user && (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => handleLike(blog)}
+            >
+              Like
+            </Button>
+          )}
+        </Box>
+
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ mb: 2 }}
+        >
+          Added by {blog.user?.name}
+        </Typography>
+
+        {showRemoveButton && (
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={() => handleDelete(blog)}
+          >
+            Delete
+          </Button>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 
