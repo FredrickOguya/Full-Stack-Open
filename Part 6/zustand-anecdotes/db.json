@@ -2,23 +2,63 @@
   "anecdotes": [
     {
       "content": "hello to myself",
-      "votes": 8,
+      "votes": 9,
       "id": "b0Qh_FjU6IE"
     },
     {
       "content": "ddd",
-      "votes": 24,
+      "votes": 25,
       "id": "eEPzKoiev24"
     },
     {
       "content": "hoolll",
-      "votes": 2,
+      "votes": 3,
       "id": "tfqvvDJDgZQ"
     },
     {
       "content": "hello to myself",
       "votes": 0,
       "id": "veMAmtvpixA"
+    },
+    {
+      "content": "etwer",
+      "votes": 0,
+      "id": "9lufGHssdHA"
+    },
+    {
+      "content": "ewdfrewr",
+      "votes": 1,
+      "id": "x-wpmootAnk"
+    },
+    {
+      "content": "My constructions",
+      "votes": 0,
+      "id": "AaYKxVzHSr4"
+    },
+    {
+      "content": "etwer",
+      "votes": 1,
+      "id": "aU0ujLIjADA"
+    },
+    {
+      "content": "etwer",
+      "votes": 0,
+      "id": "o-d1kTe8-UM"
+    },
+    {
+      "content": "My constructions",
+      "votes": 1,
+      "id": "uA36OPDRQjY"
+    },
+    {
+      "content": "etwer",
+      "votes": 0,
+      "id": "2rknNStrc98"
+    },
+    {
+      "content": "Hello",
+      "votes": 0,
+      "id": "KpBNSvK3aNA"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

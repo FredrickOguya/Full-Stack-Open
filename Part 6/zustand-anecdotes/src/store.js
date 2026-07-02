@@ -1,6 +1,7 @@
 
 import { create } from 'zustand'
 import anecdoteService from './services/anecdotes'
+import useNotificationStore from './notificationStore'
 
 
 
@@ -16,6 +17,7 @@ const useAnecdoteStore = create((set) => ({
       set(state => ({
         anecdotes: state.anecdotes.map(a => a.id === id ? updated : a)
       }))
+      useNotificationStore.getState().setNotification(`You voted for '${updated.content}'`)
     },
     addAnecdote: newAnecdote => set(
       state => ({
