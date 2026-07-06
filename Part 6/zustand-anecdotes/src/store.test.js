@@ -1,7 +1,7 @@
 import { describe, expect, it, vi  } from "vitest";
 import anecdoteService from './services/anecdotes'
 import { renderHook, act } from "@testing-library/react";
-import useAnecdoteStore from "./store";
+import useAnecdoteStore, { useAnecdotes } from "./store";
 
 vi.mock('./services/anecdotes', () => {
   return {
@@ -25,5 +25,17 @@ describe('Anecdote Store Logic', () => {
     await act(async () => await result.current.actions.initialize(anecdotes))
 
     expect(useAnecdoteStore.getState().anecdotes).toEqual(anecdotes)
+  })
+
+  it('anecdotes are sorted by votes', () => {
+    useAnecdoteStore.setState( { anecdotes: [
+      { id: 1,content: 'A', votes: 1}, { id: 2, content: 'B', votes: 10 }, { id: 3, content: 'C', votes: 5 }
+    ]})
+
+    const { result } = renderHook(() => useAnecdotes())
+
+    expect(result.current[0].votes).toBe(10)
+    expect(result.current[1].votes).toBe(5)
+    expect(result.current[2].votes).toBe(1)
   })
 })
