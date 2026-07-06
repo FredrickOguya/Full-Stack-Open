@@ -29,7 +29,11 @@ const useAnecdoteStore = create((set) => ({
         filter: value
       })
     ),
-    initialize: anecdotes => set(() => ({ anecdotes }))
+    initialize: anecdotes => set(() => ({ anecdotes })),
+    delete: (id) => 
+      set((state) => ({
+        anecdotes: state.anecdotes.filter(anecdote => anecdote.id !== id)
+      }))
   }
 }))
 
