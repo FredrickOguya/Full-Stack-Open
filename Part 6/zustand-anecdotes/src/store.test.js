@@ -38,4 +38,15 @@ describe('Anecdote Store Logic', () => {
     expect(result.current[1].votes).toBe(5)
     expect(result.current[2].votes).toBe(1)
   })
+
+  it('anecdotes are filtered properly', () => {
+    useAnecdoteStore.setState({
+      anecdotes: [{ content: 'React' }, { content: 'Vue' }],
+      filter: 'Re'
+    })
+
+    const { result } = renderHook(() => useAnecdotes())
+    expect(result.current).toHaveLength(1)
+    expect(result.current[0].content).toBe('React')
+  })
 })
