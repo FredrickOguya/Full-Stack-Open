@@ -49,4 +49,17 @@ describe('Anecdote Store Logic', () => {
     expect(result.current).toHaveLength(1)
     expect(result.current[0].content).toBe('React')
   })
+
+  it('voting increases anecdote votes',async () => {
+    const initial = { id: 1, content: 'Test', votes: 0 }
+    useAnecdoteStore.setState({ anecdotes: [initial] })
+    anecdoteService.update.mockResolvedValue({ ...initial, votes: 1 })
+
+    const { result } = renderHook(() => useAnecdoteStore(state => state))
+    await act(async () => await result.current.actions.vote(initial.id))
+
+    const updated = useAnecdoteStore.getState().anecdotes.find(a => a.id === 1)
+    expect(updated.votes).toBe(1)
+
+  })
 })
