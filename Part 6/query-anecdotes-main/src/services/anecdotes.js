@@ -10,4 +10,18 @@ const getAnecdotes = async () => {
     return response.json()
 }
 
-export default getAnecdotes
+const createAnecdote = async (content) => {
+    const response = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify({content, votes: 0})
+    })
+
+    if(!response.ok) {
+        throw new Error('Error creating anecdote')
+    }
+
+    return response.json()
+}
+
+export  { getAnecdotes, createAnecdote }
