@@ -12,10 +12,15 @@ const getAll = async () => {
 }
 
 const createNew = async (content) => {
+
+  if(!content || content.trim().length < 5){
+    throw new Error('too short anecdote, must have length 5 or more')
+  }
+
   const response = await fetch(baseUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content, votes: 0 })
+    body: JSON.stringify({ content, votes: 0 }),
   })
 
   if(!response.ok) {

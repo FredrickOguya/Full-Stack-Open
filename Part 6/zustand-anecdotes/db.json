@@ -7,7 +7,7 @@
     },
     {
       "content": "ddd",
-      "votes": 33,
+      "votes": 36,
       "id": "eEPzKoiev24"
     },
     {
@@ -47,7 +47,7 @@
     },
     {
       "content": "My constructions",
-      "votes": 2,
+      "votes": 3,
       "id": "uA36OPDRQjY"
     },
     {
@@ -72,8 +72,53 @@
     },
     {
       "content": "If it hurts, do it more often",
-      "votes": 1,
+      "votes": 2,
       "id": "9QGnHF74HXo"
+    },
+    {
+      "content": "s",
+      "votes": 0,
+      "id": "jkyKAAbg4sM"
+    },
+    {
+      "content": "s",
+      "votes": 0,
+      "id": "LuvNELm59hk"
+    },
+    {
+      "content": "s",
+      "votes": 0,
+      "id": "P2Ccgs5kEg4"
+    },
+    {
+      "content": "sdwd",
+      "votes": 0,
+      "id": "siI8AfpteTo"
+    },
+    {
+      "content": "sdwd",
+      "votes": 0,
+      "id": "8mCnBWPtZZA"
+    },
+    {
+      "content": "ty",
+      "votes": 0,
+      "id": "zvytKIRzQcU"
+    },
+    {
+      "content": "f",
+      "votes": 0,
+      "id": "0MN1WH1SAFc"
+    },
+    {
+      "content": "s",
+      "votes": 0,
+      "id": "M2JrZORf4sw"
+    },
+    {
+      "content": "jdgwjuidhi",
+      "votes": 0,
+      "id": "p7xEW2gIGrE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

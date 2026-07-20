@@ -11,13 +11,18 @@ const AnecdoteForm = () => {
   const createAnecdote = async (event) => {
     event.preventDefault()
 
-    const content = event.target.anecdote.value
-    const newAnecdote = await anecdoteService.createNew(content)
+    try {
+      const content = event.target.anecdote.value
+      const newAnecdote = await anecdoteService.createNew(content)
 
-    addAnecdote(newAnecdote)
+      addAnecdote(newAnecdote)
 
-    event.target.anecdote.value = ''
-    showNotification(`${content} added successfully`)
+      event.target.anecdote.value = ''
+      showNotification(`${content} added successfully`)
+    } catch (error) {
+      showNotification(error.message)
+    }
+    
   }
 
   return (
