@@ -1,12 +1,12 @@
 import { useAnecdoteActions } from "./store"
 import anecdoteService from './services/anecdotes'
-import { useContext } from "react"
 import { NotificationContext } from "./contexts/NotificationContext"
+import useNotification from "./hooks/useNotification"
 
 const AnecdoteForm = () => {
 
   const { addAnecdote } = useAnecdoteActions()
-  const { showNotification } = useContext(NotificationContext)
+  const { showNotification } = useNotification(NotificationContext)
 
   const createAnecdote = async (event) => {
     event.preventDefault()

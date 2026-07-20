@@ -1,9 +1,9 @@
-import { useContext } from "react"
 import { NotificationContext } from "../contexts/NotificationContext"
+import useNotification from "../hooks/useNotification"
 
 const Notification = () => {
  
-  const {notification} = useContext(NotificationContext) 
+  const {notification} = useNotification(NotificationContext) 
 
   if(!notification) return null
   const style = {

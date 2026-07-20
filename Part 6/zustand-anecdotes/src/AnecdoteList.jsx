@@ -1,6 +1,6 @@
-import { useContext } from "react"
 import { useAnecdoteActions, useAnecdotes } from "./store"
 import { NotificationContext } from "./contexts/NotificationContext"
+import useNotification from "./hooks/useNotification"
 
 const AnecdoteList = () => {
   const anecdotes = useAnecdotes()
@@ -11,7 +11,7 @@ const AnecdoteList = () => {
    (a,b) => b.votes - a.votes
   )
 
-  const { showNotification } = useContext(NotificationContext)
+  const { showNotification } = useNotification(NotificationContext)
   return (
     <div>
       <h2>Anecdotes</h2>
