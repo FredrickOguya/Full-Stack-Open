@@ -2,12 +2,12 @@
   "anecdotes": [
     {
       "content": "hello to myself",
-      "votes": 9,
+      "votes": 10,
       "id": "b0Qh_FjU6IE"
     },
     {
       "content": "ddd",
-      "votes": 29,
+      "votes": 33,
       "id": "eEPzKoiev24"
     },
     {
@@ -17,7 +17,7 @@
     },
     {
       "content": "hello to myself",
-      "votes": 0,
+      "votes": 1,
       "id": "veMAmtvpixA"
     },
     {
@@ -27,7 +27,7 @@
     },
     {
       "content": "ewdfrewr",
-      "votes": 1,
+      "votes": 2,
       "id": "x-wpmootAnk"
     },
     {
@@ -37,7 +37,7 @@
     },
     {
       "content": "etwer",
-      "votes": 1,
+      "votes": 2,
       "id": "aU0ujLIjADA"
     },
     {
@@ -47,7 +47,7 @@
     },
     {
       "content": "My constructions",
-      "votes": 1,
+      "votes": 2,
       "id": "uA36OPDRQjY"
     },
     {
@@ -59,6 +59,21 @@
       "content": "Hello",
       "votes": 0,
       "id": "KpBNSvK3aNA"
+    },
+    {
+      "content": "etwer",
+      "votes": 0,
+      "id": "flb-sA7hdO8"
+    },
+    {
+      "content": "Hello myself",
+      "votes": 0,
+      "id": "fCUnUCoEAmQ"
+    },
+    {
+      "content": "If it hurts, do it more often",
+      "votes": 1,
+      "id": "9QGnHF74HXo"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

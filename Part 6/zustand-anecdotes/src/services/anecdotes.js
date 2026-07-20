@@ -48,4 +48,4 @@ const remove = async (id) => {
   }
   return response.json()
 }
-export { getAll,createNew, update, remove }
+export default { getAll,createNew, update, remove }
