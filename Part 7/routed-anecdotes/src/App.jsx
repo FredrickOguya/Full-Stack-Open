@@ -7,11 +7,9 @@ import CreateNew from './components/CreateNew'
 import { useAnecdotes } from './hooks/useAnecdotes'
 
 const App = () => {
-  const anecdotes = useAnecdotes()
+  const {anecdotes , addAnecdote}= useAnecdotes()
 
-  const addAnecdote = (anecdote) => {
-    console.log("anecdote is being added", anecdote)
-  }
+  
 
   return (
     <Router>
