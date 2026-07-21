@@ -8,9 +8,15 @@ export const useAnecdotes = () => {
         anecdoteService.getAll().then(data => setAnecdotes(data))
     }, [])
 
-    const addAnecdote = (anecdote) => {
-         setAnecdotes(anecdotes.concat({ ...anecdote, id: Math.round(Math.random() * 10000) }))
+    const addAnecdote = async (anecdote) => {
+        const created = await anecdoteService.createNew(anecdote)
+        setAnecdotes(prev => prev.concat(created))
     }
 
-    return { anecdotes, addAnecdote }
+    const deleteAnecdote = async (id) => {
+        await anecdoteService.remove(id)
+        setAnecdotes(prev => prev.filter(anecdote => anecdote.id !== id))
+    }
+
+    return { anecdotes, addAnecdote, deleteAnecdote }
 }
