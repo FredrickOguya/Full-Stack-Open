@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -20,6 +20,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import NotFound from './components/NotFound'
 import useNotificationStore from './stores/useNotificationStore'
 import useBlogStore from './stores/useBlogStore'
+import useUserStore from './stores/useUserStore'
 
 const App = () => {
   const blogs = useBlogStore((state) => state.blogs)
@@ -28,7 +29,9 @@ const App = () => {
   const updateBlog = useBlogStore(state => state.updateBlog)
   const removeBlog = useBlogStore(state => state.removeBlog)
 
-  const [user, setUser] = useState(null)
+  const user = useUserStore(state => state.user)
+  const setUser = useUserStore(state => state.setUser)
+
   const makeNotification = useNotificationStore((state) => state.makeNotification)
 
   const navigate = useNavigate()
@@ -43,7 +46,7 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [setUser])
 
   const handleCreateBlog = async (blogObject) => {
     try {
