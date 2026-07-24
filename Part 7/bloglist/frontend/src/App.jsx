@@ -18,11 +18,12 @@ import Blogs from './components/Blogs'
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
 import ErrorBoundary from './components/ErrorBoundary'
 import NotFound from './components/NotFound'
+import useNotificationStore from './stores/useNotification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState(null)
+  const makeNotification = useNotificationStore((state) => state.makeNotification)
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -43,23 +44,18 @@ const App = () => {
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
 
-      setNotification({
+      makeNotification({
         text: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
         type: 'success',
       })
       navigate('/')
 
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
     } catch {
-      setNotification({
+      makeNotification({
         text: 'Error adding blog',
         type: 'error',
       })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+
     }
   }
 
@@ -72,24 +68,19 @@ const App = () => {
       blogService.setToken(user.token)
 
       setUser(user)
-      setNotification({
+      makeNotification({
         text: `You are now logged ${user.name}`,
         type: 'success',
       })
       setTimeout(() => {
         navigate('/')
       }, 2000)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
     } catch {
-      setNotification({
+      makeNotification({
         text: 'wrong username or password',
         type: 'error',
       })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+
     }
   }
 
@@ -178,7 +169,7 @@ const App = () => {
           </div>
         )}
       </div>
-      <Notification notification={notification} />
+      <Notification />
       <ErrorBoundary>
         <Routes>
           <Route path="/" element={<Blogs blogs={blogs} />} />
@@ -188,7 +179,6 @@ const App = () => {
               <LoginForm
                 handleLogin={handleLogin}
                 user={user}
-                notification={notification}
               />
             }
           />
@@ -196,7 +186,6 @@ const App = () => {
             path="/create-new-blog"
             element={
               <BlogForm
-                notification={notification}
                 createBlog={handleCreateBlog}
               />
             }

@@ -1,5 +1,8 @@
 import { Alert } from '@mui/material'
-const Notification = ({ notification }) => {
+import useNotificationStore from '../stores/useNotification'
+const Notification = () => {
+
+  const notification = useNotificationStore((state) => state.notification)
   if (notification === null) {
     return null
   }

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Notification from './Notification'
 import { Input, Button } from '@mui/material'
 
-const LoginForm = ({ handleLogin, notification }) => {
+const LoginForm = ({ handleLogin }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -19,7 +19,6 @@ const LoginForm = ({ handleLogin, notification }) => {
   {
     return (
       <div>
-        <Notification notification={notification} />
         <h2>Log in to application</h2>
         <form onSubmit={handleSubmit}>
           <div>
