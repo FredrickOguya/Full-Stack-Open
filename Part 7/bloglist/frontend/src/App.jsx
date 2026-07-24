@@ -14,6 +14,7 @@ import {
 import Blogs from './components/Blogs'
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
 import ErrorBoundary from './components/ErrorBoundary'
+import NotFound from './components/NotFound'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -191,6 +192,9 @@ const App = () => {
           <Route path='/blogs/:id' element={
             <Blog blog={blog} handleDelete={handleBlogDelete} handleLike={handleLike} user={user} />
           }/>
+
+
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </ErrorBoundary>
     </div>
