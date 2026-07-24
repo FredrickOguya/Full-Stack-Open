@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-const Blogs = ({  blogs }) => {
+
+const Blogs = ({ blogs }) => {
   return <div>
     {(
       <div>

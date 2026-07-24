@@ -13,6 +13,8 @@ import {
 } from 'react-router-dom'
 import Blogs from './components/Blogs'
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
+import ErrorBoundary from './components/ErrorBoundary'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
@@ -171,25 +173,26 @@ const App = () => {
         )}
 
       </div>
-
       <Notification notification={notification}/>
-      <Routes>
-        <Route path='/' element={
-          <Blogs
-            blogs={blogs}
-          />
-        } />
-        <Route path='/login' element={
-          <LoginForm handleLogin={handleLogin} user={user} notification={notification}/>
-        } />
-        <Route path='/create-new-blog' element={
-          <BlogForm notification={notification} createBlog={handleCreateBlog}/>
+      <ErrorBoundary>
+        <Routes>
+          <Route path='/' element={
+            <Blogs
+              blogs={blogs}
+            />
+          } />
+          <Route path='/login' element={
+            <LoginForm handleLogin={handleLogin} user={user} notification={notification}/>
+          } />
+          <Route path='/create-new-blog' element={
+            <BlogForm notification={notification} createBlog={handleCreateBlog}/>
 
-        } />
-        <Route path='/blogs/:id' element={
-          <Blog blog={blog} handleDelete={handleBlogDelete} handleLike={handleLike} user={user} />
-        }/>
-      </Routes>
+          } />
+          <Route path='/blogs/:id' element={
+            <Blog blog={blog} handleDelete={handleBlogDelete} handleLike={handleLike} user={user} />
+          }/>
+        </Routes>
+      </ErrorBoundary>
     </div>
   )
 }
