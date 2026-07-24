@@ -6,19 +6,19 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: '../backend/dist',
-    emptyOutDir: true
+    emptyOutDir: true,
   },
   server: {
     proxy: {
       '/api': {
         target: 'http://localhost:3003',
-        changeOrigin: true
-      }
-    }
+        changeOrigin: true,
+      },
+    },
   },
   test: {
     environment: 'jsdom',
     globals: true,
-    setupFiles: './testSetup.js'
-  }
+    setupFiles: './testSetup.js',
+  },
 })

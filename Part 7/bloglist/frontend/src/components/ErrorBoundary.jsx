@@ -10,22 +10,24 @@ class ErrorBoundary extends Component {
     return { hasError: true }
   }
 
-  componentDidCatch(error, errorInfo){
+  componentDidCatch(error, errorInfo) {
     console.error(error, errorInfo)
   }
 
   render() {
-    if(this.state.hasError) {
+    if (this.state.hasError) {
       return (
         <div>
           <h2>Something went wrong</h2>
-          <p>An unexptected error occured. Please refresh the page or try again later</p>
+          <p>
+            An unexptected error occured. Please refresh the page or try again
+            later
+          </p>
         </div>
       )
     }
     return this.props.children
   }
 }
-
 
 export default ErrorBoundary

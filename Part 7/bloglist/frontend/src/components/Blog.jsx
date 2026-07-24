@@ -1,17 +1,21 @@
-import { Box, Button, Card, CardActions, CardContent, Divider, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Divider,
+  Typography,
+} from '@mui/material'
 import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 Box
 
-const Blog = ({ blog, handleLike,handleDelete,user }) => {
-
-  if(!blog) {
+const Blog = ({ blog, handleLike, handleDelete, user }) => {
+  if (!blog) {
     return <div>Loading...</div>
   }
 
   const showRemoveButton = blog.user?.username === user?.username
-
-
-
 
   return (
     <Card
@@ -28,27 +32,16 @@ const Blog = ({ blog, handleLike,handleDelete,user }) => {
       }}
     >
       <CardContent>
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          gutterBottom
-        >
-      by {blog.author}
+        <Typography variant="caption" color="text.secondary" gutterBottom>
+          by {blog.author}
         </Typography>
 
-        <Typography
-          variant="h5"
-          sx={{ fontWeight: 600, mb: 1 }}
-        >
+        <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
           {blog.title}
         </Typography>
 
         <CardActions sx={{ px: 0 }}>
-          <Button
-            size="small"
-            href={blog.url}
-            target="_blank"
-          >
+          <Button size="small" href={blog.url} target="_blank">
             Read Blog
           </Button>
         </CardActions>
@@ -61,9 +54,7 @@ const Blog = ({ blog, handleLike,handleDelete,user }) => {
           alignItems="center"
           mb={1}
         >
-          <Typography variant="body2">
-            👍 {blog.likes} likes
-          </Typography>
+          <Typography variant="body2">👍 {blog.likes} likes</Typography>
 
           {user && (
             <Button
@@ -76,11 +67,7 @@ const Blog = ({ blog, handleLike,handleDelete,user }) => {
           )}
         </Box>
 
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ mb: 2 }}
-        >
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           Added by {blog.user?.name}
         </Typography>
 

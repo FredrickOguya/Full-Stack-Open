@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
-import { useNavigate,BrowserRouter as Router } from 'react-router-dom'
+import { useNavigate, BrowserRouter as Router } from 'react-router-dom'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Router>
@@ -20,7 +20,7 @@ const Blog = ({ blog }) => {
     marginBottom: 5,
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   }
 
   const handleView = () => {

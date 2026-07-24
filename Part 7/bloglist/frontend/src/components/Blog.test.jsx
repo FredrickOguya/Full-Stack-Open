@@ -12,17 +12,20 @@ test('unauthenticated users can see blog info and likes but cannot see the butto
     likes: 40,
     user: {
       username: 'Fredrick',
-      name: 'Fredrick'
-    }
+      name: 'Fredrick',
+    },
   }
 
-  render(<Blog blog={blog} user={null}/>)
+  render(<Blog blog={blog} user={null} />)
 
   expect(screen.getByText(/Testing dis ting/i)).toBeInTheDocument()
   expect(screen.getByText(/likes 40/i)).toBeInTheDocument()
-  expect(screen.queryByRole('button', { name: /like/i })).not.toBeInTheDocument()
-  expect(screen.queryByRole('button', { name: /delete/i })).not.toBeInTheDocument()
-
+  expect(
+    screen.queryByRole('button', { name: /like/i })
+  ).not.toBeInTheDocument()
+  expect(
+    screen.queryByRole('button', { name: /delete/i })
+  ).not.toBeInTheDocument()
 })
 
 test('authenticated users who are not the blog`s creator are shown only the like button', () => {
@@ -33,21 +36,21 @@ test('authenticated users who are not the blog`s creator are shown only the like
     likes: 40,
     user: {
       name: 'fredi',
-    }
+    },
   }
   const user = {
     username: 'Fredrick',
-    password: 'WsxfT'
+    password: 'WsxfT',
   }
 
-  render(<Blog blog={blog} user={user}/>)
+  render(<Blog blog={blog} user={user} />)
 
   expect(screen.getByText(/Testing dis ting/i)).toBeInTheDocument()
   expect(screen.getByText(/likes 40/i)).toBeInTheDocument()
   expect(screen.queryByRole('button', { name: /like/i })).toBeInTheDocument()
-  expect(screen.queryByRole('button', { name: /delete/i })).not.toBeInTheDocument()
-
-
+  expect(
+    screen.queryByRole('button', { name: /delete/i })
+  ).not.toBeInTheDocument()
 })
 
 test('The blog`s creator is shown the delete button', () => {
@@ -59,14 +62,14 @@ test('The blog`s creator is shown the delete button', () => {
     user: {
       username: 'Fredrick',
       name: 'Fredrick',
-    }
+    },
   }
   const user = {
     username: 'Fredrick',
-    name: 'Fredrick'
+    name: 'Fredrick',
   }
 
-  render(<Blog blog={blog} user={user}/>)
+  render(<Blog blog={blog} user={user} />)
 
   expect(screen.getByText(/Testing dis ting/i)).toBeInTheDocument()
   expect(screen.getByText(/likes 40/i)).toBeInTheDocument()
@@ -74,8 +77,7 @@ test('The blog`s creator is shown the delete button', () => {
   expect(screen.queryByRole('button', { name: /delete/i })).toBeInTheDocument()
 })
 
-
-test('authenticated users can click the like button and the likes increase',async () => {
+test('authenticated users can click the like button and the likes increase', async () => {
   const blog = {
     title: 'Testing dis ting',
     author: 'Onyi ofcourse',
@@ -83,17 +85,24 @@ test('authenticated users can click the like button and the likes increase',asyn
     likes: 40,
     user: {
       name: 'Fredrick',
-      username: 'Fredrick'
-    }
+      username: 'Fredrick',
+    },
   }
   const user = {
     name: 'Fredrick',
-    username: 'Fredrick'
+    username: 'Fredrick',
   }
 
   const mockHandler = vi.fn()
 
-  render(<Blog blog={blog} user={user} handleDelete={mockHandler} handleLike={mockHandler}/>)
+  render(
+    <Blog
+      blog={blog}
+      user={user}
+      handleDelete={mockHandler}
+      handleLike={mockHandler}
+    />
+  )
 
   const clicker = userEvent.setup()
 
@@ -107,24 +116,13 @@ test('authenticated users can click the like button and the likes increase',asyn
   expect(screen.getByText(/likes 40/i)).toBeInTheDocument()
   expect(screen.queryByRole('button', { name: /like/i })).toBeInTheDocument()
   expect(screen.queryByRole('button', { name: /delete/i })).toBeInTheDocument()
-
-
 })
-
-
-
-
-
-
-
-
-
 
 test('Blog calls the event handler with the right details when anew blog is created', async () => {
   const createBlog = vi.fn()
   const user = userEvent.setup()
 
-  render(<BlogForm createBlog={createBlog}/>)
+  render(<BlogForm createBlog={createBlog} />)
 
   const titleInput = screen.getByPlaceholderText('Enter the title')
   const authorInput = screen.getByPlaceholderText('Enter the author`s name')
@@ -132,8 +130,8 @@ test('Blog calls the event handler with the right details when anew blog is crea
   const saveButton = screen.getByText('save')
 
   await user.type(titleInput, 'tester of form')
-  await user.type(authorInput,'Fredrick Onyango')
-  await user.type(urlInput,'http://formtester.com')
+  await user.type(authorInput, 'Fredrick Onyango')
+  await user.type(urlInput, 'http://formtester.com')
 
   await user.click(saveButton)
 
